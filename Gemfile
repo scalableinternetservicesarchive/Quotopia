@@ -26,10 +26,13 @@ gem 'devise'
 
 # Use kaminari as the pagination engine
 gem 'kaminari'
-
 # twitter-typeahead-rails for typeahead
 gem 'twitter-typeahead-rails'
-
+# elasticsearch for inverted index
+gem 'elasticsearch'
+gem 'elasticsearch-model'
+gem 'elasticsearch-persistence'
+gem 'elasticsearch-rails'
 # mysql gem driver for prod and test
 gem 'mysql'
 # Use ActiveModel has_secure_password
