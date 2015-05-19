@@ -106,7 +106,8 @@ class QuotesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_quote
-      @quote = Quote.find(params[:id])
+      @quote = Quote.includes(:author, :user, :categories, {comments: :user}).find(params[:id])
+      #Quote.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
