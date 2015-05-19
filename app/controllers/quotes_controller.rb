@@ -72,6 +72,7 @@ class QuotesController < ApplicationController
   # PATCH/PUT /quotes/1
   # PATCH/PUT /quotes/1.json
   def update
+    @quote = Quote.find(params[:id])
     if params[:cancel].present?
       redirect_to root_url
       return
