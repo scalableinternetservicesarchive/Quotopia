@@ -70,6 +70,11 @@ group :development, :test do
   gem 'faker'
 
   gem 'seed_dump'
+  # Dependency for flalemgraph
+  gem 'stackprof'
+
+  # Bullet finds where you can reduce queries
+  gem 'bullet'
 end
 
 group :production do

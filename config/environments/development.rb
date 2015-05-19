@@ -50,4 +50,16 @@ Rails.application.configure do
   config.twitter_secret = Rails.application.secrets.twitter_secret
   #config.twitter_key = "kx5uJtaMv21ofApEkTxWn6McD"
   #config.twitter_secret = "KK8ctf6DXs9LZ5znaDcammgbzK61BrXnXtKX5jTZi3msH4rdYd"
+
+
+  config.after_initialize do
+    Bullet.enable = true
+    Bullet.alert = true
+    Bullet.bullet_logger = true
+    Bullet.console = true
+    Bullet.rails_logger = true
+    Bullet.add_footer = true
+    # Bullet.stacktrace_includes = [ 'your_gem', 'your_middleware' ]
+    # Bullet.slack = { webhook_url: 'http://some.slack.url', foo: 'bar' }
+  end
 end
