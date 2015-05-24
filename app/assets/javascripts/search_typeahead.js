@@ -1,3 +1,7 @@
+var wrap_data_value = function(data) {
+    return '<div>' + data.value + '</div>';
+};
+
 var init_typeahead = function(){ 
 
   var authors = new Bloodhound({
@@ -40,7 +44,7 @@ var init_typeahead = function(){
   $('#q').typeahead(
     {
         hint: true,
-        highlight: true,
+        highlighter: true,
         minLength: 1
     }, 
     {
@@ -48,7 +52,8 @@ var init_typeahead = function(){
         displayKey: 'value',
         source: authors.ttAdapter(),
         templates: {
-            header: '<h3 class="type">Authors</h3>'
+            header: '<h3 class="type">Authors</h3>',
+            suggestion: wrap_data_value
         }
     },
     {
@@ -56,7 +61,9 @@ var init_typeahead = function(){
         displayKey: 'value',
         source: categories.ttAdapter(),
         templates: {
-            header: '<h3 class="type">Categories</h3>'
+            header: '<h3 class="type">Categories</h3>',
+            suggestion: wrap_data_value
+
         }
     },
     {
@@ -64,7 +71,8 @@ var init_typeahead = function(){
         displayKey: 'value',
         source: quotes.ttAdapter(),
         templates: {
-            header: '<h3 class="type">Quotes</h3>'
+            header: '<h3 class="type">Quotes</h3>',
+            suggestion: wrap_data_value
         }
     }
   ); 

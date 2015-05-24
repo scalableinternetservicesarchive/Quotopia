@@ -23,8 +23,8 @@ class SearchesController < ApplicationController
                 }
             },
             highlight: {
-                pre_tags: [""],
-                post_tags: [""],
+                pre_tags: ["<strong>"],
+                post_tags: ["</strong>"],
                 order: "score",
                 fields: {
                     content: {
