@@ -74,6 +74,11 @@ class SearchesController < ApplicationController
                 post_tags: ["</strong>"],
                 order: "score",
                 fields: {
+                    name: {
+                        fragment_size: 10,
+                        number_of_fragments: 3,
+                        no_match_size: 20
+                    },
                     content: {
                         fragment_size: 150,
                         number_of_fragments: 3,
@@ -86,7 +91,7 @@ class SearchesController < ApplicationController
         case @type
         when "author"
             @results = Elasticsearch::Model.search(@query, [Author]).results.map do |result|
-                {:value => result["_source"]["name"]}
+                {:value => result["highlight"]["name"].join('')}
             end
         when "quote"
             @results = Elasticsearch::Model.search(@query, [Quote]).results.map do |result|
