@@ -1,17 +1,48 @@
 class SearchesController < ApplicationController
-    
+    require 'ostruct'
     def search 
       @has_search = false
     
       if params[:q] && !params[:q].empty?
         @has_search = true
-        @search_quotes = Quote.search(params[:q]).page(params[:page])
+        #@search_quotes = Quote.search(params[:q]).page(params[:page])
+        @results = search_index(params[:q])
+        @search_quotes = Kaminari.paginate_array(@results).page(params[:page])
       else
         @search_quotes = nil
       end
     end
 
-        
+    def search_index(q)
+        @query = {
+            query: {
+                query_string: {
+                    query: "*#{q}*"
+                }
+            }
+        }
+
+        # convert the hash result from Elasticsearch into a generic object for
+        # quote_block
+        @results = Quote.__elasticsearch__.search(@query).results.map do |result|
+            @source = result["_source"]
+            @quote = OpenStruct.new(
+                :id => @source["id"],
+                :content => @source["content"],
+                :author_id => @source["author_id"],
+                :author_name => @source["author"]["name"]
+            )
+        end
+    end
+
+    # for testing with search results
+    def search_json
+        @q = params[:q].downcase
+        @quotes = search_index(@q)
+        render html: @quotes
+        #render "quotes/_quote_block" #puts render body: search_index(@q).to_json
+    end
+    
     def typeahead
         @type = params[:type]
 
