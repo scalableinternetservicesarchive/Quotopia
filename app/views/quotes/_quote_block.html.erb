@@ -25,7 +25,7 @@
             <div onclick="location.href='<%=quote_path(quote.id)%>';" style="cursor: pointer;" class="panel-body quote-content no-highlight over">
                 <%= quote.content.html_safe %>
                 <% if display_author %>
-                    <div class="author-name">-  <a class="no-bubble" href="<%= author_path(quote.author_id) %>"><%= quote.author_name %></a> </div>
+                    <div class="author-name">-  <a class="no-bubble" href="<%= author_path(quote.author_id) %>"><%= quote.author_name.html_safe %></a> </div>
                 <% end %>
                 <br>
               <%= javascript_tag do %>

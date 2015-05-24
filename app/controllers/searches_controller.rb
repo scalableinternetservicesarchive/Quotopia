@@ -16,11 +16,20 @@ class SearchesController < ApplicationController
     def map_to_obj(results)
         results.map do |result|
             @source = result["_source"]
+            
+            @author_name = @source["author"]["name"]
+            @content = @source["content"]
+
+            # use highlighted fields if possible
+            if result.has_key?("highlight")
+                @author_name = result["highlight"]["name"].join('') if result["highlight"].has_key?("name")
+                @content = result["highlight"]["content"].join('') if result["highlight"].has_key?("content")
+            end
             @quote = OpenStruct.new(
                 :id => @source["id"],
-                :content => result["highlight"]["content"].join(''),
+                :content => @content,
                 :author_id => @source["author_id"],
-                :author_name => @source["author"]["name"]
+                :author_name => @author_name
             )
         end
     end
@@ -37,10 +46,11 @@ class SearchesController < ApplicationController
                 post_tags: ["</strong>"],
                 order: "score",
                 fields: {
+                    name: {
+                        number_of_fragments: 0
+                    },
                     content: {
-                        fragment_size: 150,
-                        number_of_fragments: 0,
-                        no_match_size: 150
+                        number_of_fragments: 0
                     }
                 }
             }
