@@ -1,5 +1,3 @@
-# import models to elasticsearch
-rake environment elasticsearch:import:all DIR=app/models
 # Add database seed data
 # This could timeout the instance if the seed data is too large
 rake db:seed
