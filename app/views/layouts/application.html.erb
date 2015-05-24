@@ -21,22 +21,22 @@
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav" style="display:inline;">
                 <% if user_signed_in? %>
-                    <li><%= link_to "Favorites", '/favorite_quotes/user', 
-                        :class => "nav-link ", :method => :get %></li>
-                <% end %>    
-                <li><%= link_to "Authors", authors_path, 
-                    :class => "active nav-link", :method => :get %></li>
-                 <li><%= link_to "Categories", categories_path, :class => "nav-link",
-                    :method => :get %></li>
+                    <li class="<%=is_active('favorite_quotes')%>"><%= link_to "Favorites", '/favorite_quotes/user', 
+                        :class => "nav-link ", :id => "fave-nav", :method => :get %></li>
+                <% end %>   
+
+                <li class="<%=is_active('authors')%>"><%= link_to "Authors", authors_path, 
+                    :class => "nav-link", :id =>"author-nav", :method => :get %></li>
+                 <li class="<%=is_active('categories')%>"><%= link_to "Categories", categories_path, :class => "nav-link", :id =>"category-nav", :method => :get %></li>
            </ul>
             <ul class="nav navbar-nav navbar-right">
                 <% unless user_signed_in? %>
-                   <li> <%= link_to "Sign in", new_user_session_path,
+                   <li class="<%=is_active('devise/sessions')%>"> <%= link_to "Sign in", new_user_session_path,
                         :class => " nav-link", :method => :get %></li>
                    <li> <%= link_to "Sign up", new_user_registration_path, :id => "sign-up-btn",
                         :class => "btn btn-default navbar-btn", :method => :get %></li>
                 <% else %>
-                   <li> <%= link_to "My Account", edit_user_registration_path,
+                   <li class="<%=is_active('devise/registrations')%>"> <%= link_to "My Account", edit_user_registration_path,
                         :class => " nav-link", :method => :get %></li>
                    <li>  <%= link_to "Logout", destroy_user_session_path, 
                         :class => " nav-link", :method => :delete %></li>

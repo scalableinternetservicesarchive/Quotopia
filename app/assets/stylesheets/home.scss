@@ -35,14 +35,15 @@ background: -webkit-linear-gradient(#53bc8d, #40b581); /* For Safari 5.1 to 6.0 
 .nav-link{
   color:white !important;
 }
-.nav-link:hover {
+.nav-link:hover, li.active a{
   -webkit-box-shadow:inset 0px -3px 0px 0px #a3c7ff;
     -moz-box-shadow:inset 0px -3px 0px 0px #a3c7ff;
     box-shadow:inset 0px -3px 0px 0px #a3c7ff;
 }
-/*.fa-heart-o {
-  color:#B22222;
-}*/
+ li.active a{
+background-color: #3360A3 !important;
+ }
+
 
 .searchbar {
   width: 1% !important;
