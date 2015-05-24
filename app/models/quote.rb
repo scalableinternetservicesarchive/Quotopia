@@ -1,4 +1,7 @@
 class Quote < ActiveRecord::Base
+  include Elasticsearch::Model
+  include Elasticsearch::Model::Callbacks
+
   belongs_to :author
   # belongs_to :submitter, class_name: 'User', foreign_key: 'user_id' if keep tracking of user-submissions does not work
   belongs_to :user
@@ -18,10 +21,16 @@ class Quote < ActiveRecord::Base
                     message: "quote should be unique per author"}
   validates :author, presence: true
 
+  def as_indexed_json(options={})
+      as_json(
+          only: [:content]
+      )
+  end
+
   # This determines how many quotes to display per page
   paginates_per 7
 
-	def self.search(search)
+  def self.search(search)
     @quote = Quote.joins(:author, :categories)
                   .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id")
                   .where("categories.content LIKE ?", "#{search}")
@@ -47,6 +56,6 @@ class Quote < ActiveRecord::Base
     self.categories.collect do |category|
       category.content
       end.join(", ")
-    end
+  end
 
 end

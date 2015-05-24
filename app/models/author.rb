@@ -7,6 +7,11 @@ class Author < ActiveRecord::Base
   validates :name, presence: true
   validates :name, uniqueness: { case_sensitive: false }
 
+  def as_indexed_json(options={})
+    as_json(
+        only: [:name]
+    )
+  end
   def self.search(query)
     __elasticsearch__.search(
         {
