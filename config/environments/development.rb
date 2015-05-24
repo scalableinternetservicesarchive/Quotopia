@@ -9,6 +9,10 @@ Rails.application.configure do
   # Do not eager load code on boot.
   config.eager_load = false
 
+  # Turn on caching
+  config.cache_store = :dalli_store
+  config.action_controller.perform_caching = true
+
   # Show full error reports and disable caching.
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
@@ -45,6 +49,7 @@ Rails.application.configure do
 
   config.twitter_key = Rails.application.secrets.twitter_key
   config.twitter_secret = Rails.application.secrets.twitter_secret
+
   #config.twitter_key = "kx5uJtaMv21ofApEkTxWn6McD"
   #config.twitter_secret = "KK8ctf6DXs9LZ5znaDcammgbzK61BrXnXtKX5jTZi3msH4rdYd"
 end

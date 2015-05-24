@@ -13,6 +13,7 @@ Rails.application.configure do
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
+  config.cache_store = :dalli_store
 
   # Enable Rack::Cache to put a simple HTTP cache in front of your application
   # Add `rack-cache` to your Gemfile before enabling this.
@@ -81,6 +82,7 @@ Rails.application.configure do
 
   config.twitter_key = Rails.application.secrets.twitter_key
   config.twitter_secret = Rails.application.secrets.twitter_secret
+
   #config.twitter_key = "kx5uJtaMv21ofApEkTxWn6McD"
   #config.twitter_secret = "KK8ctf6DXs9LZ5znaDcammgbzK61BrXnXtKX5jTZi3msH4rdYd"
 end

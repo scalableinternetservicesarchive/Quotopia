@@ -32,6 +32,10 @@ gem 'twitter-typeahead-rails'
 
 # mysql gem driver for prod and test
 gem 'mysql'
+
+# dalli gem for memcached
+gem 'dalli'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
