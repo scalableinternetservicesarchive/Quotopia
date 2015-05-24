@@ -8,7 +8,21 @@
  */
 #q {
   border-radius: 0px;
-}    
+  
+}
+.tt-dataset-authors, .tt-dataset-categories {
+  float: left;
+}
+
+.tt-dataset-quotes {
+    clear: both;
+}
+
+.type {
+    margin: 0 20px 5px 20px;
+    padding: 3px 0;
+    border-bottom: 1px solid #ccc;
+}
 .has-warning .twitter-typeahead .tt-input,
 .has-warning .twitter-typeahead .tt-hint {
   border-color: #8a6d3b;

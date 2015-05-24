@@ -27,7 +27,7 @@ gem 'devise'
 # Use kaminari as the pagination engine
 gem 'kaminari'
 # twitter-typeahead-rails for typeahead
-gem 'twitter-typeahead-rails'
+gem 'twitter-typeahead-rails', :git => "git://github.com/yourabi/twitter-typeahead-rails.git"
 # elasticsearch for inverted index
 gem 'elasticsearch'
 gem 'elasticsearch-model'
