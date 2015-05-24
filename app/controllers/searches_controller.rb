@@ -13,10 +13,28 @@ class SearchesController < ApplicationController
 
     def typeahead
         @q = params[:q].downcase
-        @author_result = Author.search(@q).records
-        @authors = @author_result.map do |author| 
-            {:value => author.name }
-        end
+        @query = {
+            query: {
+                query_string: {
+                    query: "*#{@q}*"
+                }
+            },
+            highlight: {
+                order: "score",
+                fields: {
+                    content: {
+                        fragment_size: 150,
+                        number_of_fragments: 3,
+                        no_match_size: 150
+                    }
+                }
+            }
+        }
+        @author_result = Author.search(@q).results
+        @results = Elasticsearch::Model.search(@query, [Author, Category, Quote]).results.to_a.map(&:to_hash)
+        #@authors = @author_result.map do |author| 
+        #    {:value => author.name }
+        #end
         #@authors = Author.select("authors.name as value")
         #                 .where("authors.name LIKE ?", "%#{@q}%")
         
@@ -28,7 +46,7 @@ class SearchesController < ApplicationController
         #               .where("quotes.content LIKE ?", "%#{@q}%")
         
         #might want to ensure capitalization in @categories?
-        puts render json: @authors #+ @categories #+ @quotes
+        puts render json: @results 
 
     end
 end 

@@ -1,4 +1,7 @@
 class Quote < ActiveRecord::Base
+  include Elasticsearch::Model
+  include Elasticsearch::Model::Callbacks
+
   belongs_to :author
   # belongs_to :submitter, class_name: 'User', foreign_key: 'user_id' if keep tracking of user-submissions does not work
   belongs_to :user
@@ -17,6 +20,12 @@ class Quote < ActiveRecord::Base
   validates :content_hash, uniqueness: {scope: :author, case_sensitive: false,
                     message: "quote should be unique per author"}
   validates :author, presence: true
+
+  def as_indexed_json(options={})
+      as_json(
+          only: [:content]
+      )
+  end
 
   # This determines how many quotes to display per page
   paginates_per 7
