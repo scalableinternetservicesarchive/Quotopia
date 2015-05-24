@@ -51,6 +51,12 @@ gem 'omniauth'
 
 # for mysql Triggers
 gem 'hairtrigger'
+# multi_json for aws
+gem 'multi_json', '1.7.8'
+
+group :development, :test do
+  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'byebug'
 
 group :development, :test do
   # Access an IRB console on exception pages or by using <%= console %> in views
