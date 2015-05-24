@@ -70,14 +70,11 @@ var init_typeahead = function(){
   ); 
 
   $('#q').bind('typeahead:render', function(ev, suggestion) {
-    console.log('rendered!');
     var $authors = $('.tt-dataset-authors');
     var $categories = $('.tt-dataset-categories');
 
     var authors_hasChildren = ($authors.children().length > 0); 
     var categories_hasChildren = ($categories.children().length > 0);
-    console.log('authors: ' + $authors.children() + ' length: ' + $authors.children().length);
-    console.log('categories: ' + categories_hasChildren);
     if(authors_hasChildren && categories_hasChildren) {
         $authors.css('width', '50%');
         $categories.css('width', '50%');
