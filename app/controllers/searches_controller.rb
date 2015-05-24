@@ -7,7 +7,7 @@ class SearchesController < ApplicationController
         @has_search = true
         #@search_quotes = Quote.search(params[:q]).page(params[:page])
         @results = map_to_obj(search_index(params[:q]))
-        @search_quotes = Kaminari.paginate_array(@results).page(params[:page])
+        @search_quotes = Kaminari.paginate_array(@results).page(params[:page]).per(7)
       else
         @search_quotes = nil
       end
@@ -36,6 +36,7 @@ class SearchesController < ApplicationController
 
     def search_index(q)
         @query = {
+            size: 310,
             query: {
                 query_string: {
                     query: "*#{q}*"
