@@ -6,11 +6,23 @@ class SearchesController < ApplicationController
       if params[:q] && !params[:q].empty?
         @has_search = true
         #@search_quotes = Quote.search(params[:q]).page(params[:page])
-        @results = search_index(params[:q])
+        @results = map_to_obj(search_index(params[:q]))
         @search_quotes = Kaminari.paginate_array(@results).page(params[:page])
       else
         @search_quotes = nil
       end
+    end
+
+    def map_to_obj(results)
+        results.map do |result|
+            @source = result["_source"]
+            @quote = OpenStruct.new(
+                :id => @source["id"],
+                :content => result["highlight"]["content"].join(''),
+                :author_id => @source["author_id"],
+                :author_name => @source["author"]["name"]
+            )
+        end
     end
 
     def search_index(q)
@@ -19,27 +31,31 @@ class SearchesController < ApplicationController
                 query_string: {
                     query: "*#{q}*"
                 }
+            },
+            highlight: {
+                pre_tags: ["<strong>"],
+                post_tags: ["</strong>"],
+                order: "score",
+                fields: {
+                    content: {
+                        fragment_size: 150,
+                        number_of_fragments: 0,
+                        no_match_size: 150
+                    }
+                }
             }
         }
 
         # convert the hash result from Elasticsearch into a generic object for
         # quote_block
-        @results = Quote.__elasticsearch__.search(@query).results.map do |result|
-            @source = result["_source"]
-            @quote = OpenStruct.new(
-                :id => @source["id"],
-                :content => @source["content"],
-                :author_id => @source["author_id"],
-                :author_name => @source["author"]["name"]
-            )
-        end
+        @results = Quote.__elasticsearch__.search(@query).results
     end
 
     # for testing with search results
     def search_json
         @q = params[:q].downcase
         @quotes = search_index(@q)
-        render html: @quotes
+        puts render json: @quotes
         #render "quotes/_quote_block" #puts render body: search_index(@q).to_json
     end
     
