@@ -151,7 +151,7 @@ GEM
     minitest (5.6.1)
     mocha (1.1.0)
       metaclass (~> 0.0.1)
-    multi_json (1.11.0)
+    multi_json (1.7.8)
     multipart-post (2.0.0)
     mysql (2.9.1)
     mysql2 (0.3.18)
@@ -288,6 +288,7 @@ DEPENDENCIES
   kaminari
   less-rails
   mocha
+  multi_json (= 1.7.8)
   mysql
   mysql2
   newrelic_rpm

@@ -49,6 +49,9 @@ gem 'omniauth-twitter'
 gem 'twitter'
 gem 'omniauth'
 
+# multi_json for aws
+gem 'multi_json', '1.7.8'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
