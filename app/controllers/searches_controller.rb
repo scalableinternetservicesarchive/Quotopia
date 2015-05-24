@@ -20,6 +20,8 @@ class SearchesController < ApplicationController
                 }
             },
             highlight: {
+                pre_tags: [""],
+                post_tags: [""],
                 order: "score",
                 fields: {
                     content: {
@@ -32,9 +34,19 @@ class SearchesController < ApplicationController
         }
         @author_result = Author.search(@q).results
         @results = Elasticsearch::Model.search(@query, [Author, Category, Quote]).results.to_a.map(&:to_hash)
-        #@authors = @author_result.map do |author| 
-        #    {:value => author.name }
-        #end
+        @mapped_results = @results.map do |result|
+            @value = ""
+            case result["_type"]
+            when "author"
+                @value = "Author - " + result["_source"]["name"]
+            when "quote"
+                @value = "Quote - " + result["highlight"]["content"].join("")
+            when "category"
+                @value = "Category - " + result["highlight"]["content"].join('')
+            end
+
+            {:value => @value}
+        end
         #@authors = Author.select("authors.name as value")
         #                 .where("authors.name LIKE ?", "%#{@q}%")
         
@@ -46,7 +58,7 @@ class SearchesController < ApplicationController
         #               .where("quotes.content LIKE ?", "%#{@q}%")
         
         #might want to ensure capitalization in @categories?
-        puts render json: @results 
+        puts render json: @mapped_results 
 
     end
 end 
