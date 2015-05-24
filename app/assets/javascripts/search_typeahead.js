@@ -2,6 +2,10 @@ var wrap_data_value = function(data) {
     return '<div>' + data.value + '</div>';
 };
 
+var filter_value = function(result) {
+    return result.value.replace(/<strong>|<\/strong>|<i>|<\/i>/g, '');
+};
+
 var init_typeahead = function(){ 
 
   var authors = new Bloodhound({
@@ -50,6 +54,7 @@ var init_typeahead = function(){
     {
         name: 'authors',
         displayKey: 'value',
+        display: filter_value,
         source: authors.ttAdapter(),
         templates: {
             header: '<h3 class="type">Authors</h3>',
@@ -59,6 +64,7 @@ var init_typeahead = function(){
     {
         name: 'categories',
         displayKey: 'value',
+        display: filter_value,
         source: categories.ttAdapter(),
         templates: {
             header: '<h3 class="type">Categories</h3>',
@@ -69,6 +75,7 @@ var init_typeahead = function(){
     {
         name: 'quotes',
         displayKey: 'value',
+        display: filter_value,
         source: quotes.ttAdapter(),
         templates: {
             header: '<h3 class="type">Quotes</h3>',
