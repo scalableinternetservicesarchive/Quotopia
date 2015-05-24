@@ -1,3 +1,5 @@
 sudo yum install -y patch
 sudo yum install -y sqlite-devel
 sudo yum install -y libxml2
+sudo yum install -y elasticsearch-1.4.4
+nohup elasticsearch &
