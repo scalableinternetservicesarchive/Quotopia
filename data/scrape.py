@@ -69,11 +69,11 @@ def getQuotesWithSublist(sib, title, author):
 			#print quote
 			
 			#if extra is not None:
-			#	addCSVRow(quote, extra+" in <i>"+title+"</i> by "+author)
+			#	addCSVRow(quote, extra+" in "+title+" by "+author)
 			#else:
-			#	addCSVRow(quote, "<i>"+title+"</i> by "+author)
+			#	addCSVRow(quote, title+" by "+author)
 
-			addCSVRow(quote, "<i>"+title+"</i> by "+author, context)
+			addCSVRow(quote, title+" by "+author, context)
 			
 
 		else:
@@ -135,7 +135,6 @@ def getFilmQuotes(soup,title):
 			#Some sections are characters. Other sections do not have quotes
 			elif speaker=="Dialogue" or speaker=="Taglines" or speaker=="Cast" or speaker=="External links":
 				break
-			#print speaker+" in <i>"+title+"</i>"
 
 			#HTML organization:
 			#h2 --> span (contains film speaker's name)
@@ -150,7 +149,7 @@ def getFilmQuotes(soup,title):
 
 	
 					#print quote
-					addCSVRow(quote, speaker+" in <i>"+title+"</i>", " ")
+					addCSVRow(quote, speaker+" in "+title, " ")
 
 				#reached end of ul tags
 				else:
