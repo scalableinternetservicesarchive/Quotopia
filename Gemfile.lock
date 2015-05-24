@@ -1,3 +1,12 @@
+GIT
+  remote: git://github.com/yourabi/twitter-typeahead-rails.git
+  revision: 47d80b2d58bbeb1007b068ed97b1c5d90acb4361
+  specs:
+    twitter-typeahead-rails (0.11.1)
+      actionpack (>= 3.1)
+      jquery-rails
+      railties (>= 3.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -130,7 +139,7 @@ GEM
       sprockets (> 2, < 4)
       tilt
     libv8 (3.16.14.7)
-    loofah (2.0.1)
+    loofah (2.0.2)
       nokogiri (>= 1.5.9)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
@@ -139,7 +148,7 @@ GEM
     metaclass (0.0.4)
     mime-types (2.4.3)
     mini_portile (0.6.2)
-    minitest (5.6.0)
+    minitest (5.6.1)
     mocha (1.1.0)
       metaclass (~> 0.0.1)
     multi_json (1.11.0)
@@ -160,7 +169,7 @@ GEM
       multi_json (~> 1.3)
       omniauth-oauth (~> 1.0)
     orm_adapter (0.5.0)
-    rack (1.6.0)
+    rack (1.6.1)
     rack-mini-profiler (0.9.3)
       rack (>= 1.1.3)
     rack-test (0.6.3)
@@ -242,10 +251,6 @@ GEM
       execjs (~> 2.2)
       rails (~> 4.1)
       railties (~> 4.1)
-    twitter-typeahead-rails (0.10.5)
-      actionpack (>= 3.1)
-      jquery-rails
-      railties (>= 3.1)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     uglifier (2.7.1)
@@ -299,6 +304,6 @@ DEPENDENCIES
   turbolinks
   twitter
   twitter-bootstrap-rails
-  twitter-typeahead-rails
+  twitter-typeahead-rails!
   uglifier (>= 1.3.0)
   web-console (~> 2.0)
