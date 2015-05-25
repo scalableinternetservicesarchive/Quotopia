@@ -76,8 +76,14 @@ class QuotesController < ApplicationController
       return
     end
 
+    author_name = quote_params[:author_attributes][:name]
+    @author = Author.where(name: author_name).first_or_create
+    @quote.attributes = quote_params.except("author_attributes")
+    @quote.author = @author
+    @quote.content_hash = Digest::MD5.hexdigest(quote_params[:content].downcase)
+
     respond_to do |format|
-      if @quote.update(quote_params)
+      if @quote.save
         format.html { redirect_to @quote, notice: 'Quote was successfully updated.' }
         format.json { render :show, status: :ok, location: @quote }
       else

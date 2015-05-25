@@ -1,69 +1,61 @@
 <p id="notice"><%= notice %></p>
 <div id="alert-placeholder"></div>
-<h2 class="quote-content"><%= "\"#{@quote.content}\""%>&nbsp;&nbsp;&nbsp;
+
+<%#= cache @quote do %>
+    <h2 class="quote-content"><%= "\"#{@quote.content}\""%>&nbsp;&nbsp;&nbsp;
+        <br>
+        <i><small class="author-name">- <%= link_to @quote.author.name, author_path(@quote.author)%></small></i>
+    </h2>
     <br>
-    <i><small class="author-name">- <%= link_to @quote.author.name, author_path(@quote.author)%></small></i>
-</h2>
-<br>
-<hr class="no-padding">
-<p style="font-size: 10px; float: right">Submitted by: <%= @quote.user.email %></p>
-<br>
-<p>
-  <strong>Categories:</strong>
-    <% @quote.categories.each do |category| %>
-        <%= link_to category.content.capitalize, category_path(category)%><%=',' unless category.equal? @quote.categories.last %>
+    <hr class="no-padding">
+    <p style="font-size: 10px; float: right">Submitted by: <%= @quote.user.email %></p>
+    <br>
+    <p>
+      <strong>Categories:</strong>
+        <% @quote.categories.each do |category| %>
+            <%= link_to category.content.capitalize, category_path(category)%><%=',' unless category.equal? @quote.categories.last %>
+        <% end %>
+    </p>
+
+    <hr>
+    <% unless @quote.comments.size <= 5 %>
+        <a id='see-more' onclick="showComments();">Show More Comments</a>
     <% end %>
-</p>
-<%= javascript_tag do %>
-    function showComments() {
-        $("div.comment-hide").toggleClass("comment-hide-show");
-        
-        var $see_more = $("#see-more")
-        if ($see_more.text() == "Show More Comments")
-            $see_more.text("Show Less Comments");
-        else
-            $see_more.text("Show More Comments");
-    }
-<% end %>
-<hr>
-<% unless @quote.comments.size <= 5 %>
-    <a id='see-more' onclick="showComments();">Show More Comments</a>
-<% end %>
-<% @quote.comments.each_with_index do |comment, index| %>
-    <% 
-        @class = ""
-        if index < @quote.comments.size - 5 
-            @class += "comment-hide"
-        end
-    %>
-    <%= div_for(comment, class: @class) do %>
-        <sup>
-            <strong><%= comment.user.email %></strong> 
-            From <%= time_ago_in_words(comment.created_at)%> ago
-        </sup>
-        <div>
-          <%= comment.content %>
-        </div>
+    <% @quote.comments.each_with_index do |comment, index| %>
+        <%
+            @class = ""
+            if index < @quote.comments.size - 5
+                @class += "comment-hide"
+            end
+        %>
+        <%= div_for(comment, class: @class) do %>
+            <sup>
+                <strong><%= comment.user.email %></strong>
+                From <%= time_ago_in_words(comment.created_at)%> ago
+            </sup>
+            <div>
+              <%= comment.content %>
+            </div>
+        <% end %>
     <% end %>
-<% end %>
 
-<% if user_signed_in? %>
-<%= render 'comments/form', :object => @comment %>
-<hr>
-<% end %>
+    <% if user_signed_in? %>
+    <%= render 'comments/form', :object => @comment %>
+    <hr>
+    <% end %>
 
-<% if !current_user.nil? && !current_user.provider.nil? && current_user.provider.include?("twitter") %>
-    <!--<p>Click The link below to send a tweet.</p>-->
-    <!--<%= link_to "Send a Tweet", tweets_new_path(message: @tweet) %>-->
-    <%= render partial: 'tweets/form', locals: {tweet: @tweet} %>
-<% else %>
-    <p>You must log in to send a tweet.</p>
-    <%= link_to "Sign in with Twitter", user_omniauth_authorize_path(:twitter) %>
-<% end %>
+    <% if !current_user.nil? && !current_user.provider.nil? && current_user.provider.include?("twitter") %>
+        <!--<p>Click The link below to send a tweet.</p>-->
+        <!--<%= link_to "Send a Tweet", tweets_new_path(message: @tweet) %>-->
+        <%= render partial: 'tweets/form', locals: {tweet: @tweet} %>
+    <% else %>
+        <p>You must log in to send a tweet.</p>
+        <%= link_to "Sign in with Twitter", user_omniauth_authorize_path(:twitter) %>
+    <% end %>
 
-<br>
-<br>
+    <br>
+    <br>
 
-<%= link_to 'Edit', edit_quote_path(@quote) %> |
-<%= link_to 'Back', root_path %>
-
+    <%= link_to 'Edit', edit_quote_path(@quote) %> |
+    <%= link_to 'Back', root_path %>
+<%# end %>

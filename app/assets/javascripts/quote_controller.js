@@ -1,4 +1,14 @@
- function showMoreOrLess( elem ) {
+function showComments() {
+    $("div.comment-hide").toggleClass("comment-hide-show");
+
+    var $see_more = $("#see-more");
+    if ($see_more.text() == "Show More Comments")
+        $see_more.text("Show Less Comments");
+    else
+        $see_more.text("Show More Comments");
+}
+
+function showMoreOrLess( elem ) {
 
     var link=elem;
 
