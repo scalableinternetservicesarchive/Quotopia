@@ -1,3 +1,2 @@
 sudo yum install -y patch
 sudo yum install -y libxml2
-sudo ./elastic.sh
