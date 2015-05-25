@@ -5,8 +5,8 @@ class Quote < ActiveRecord::Base
   has_many :votes, dependent: :destroy
   has_many :users, :through => :votes
   has_many :comments, dependent: :destroy
-  has_many :categorizations
-  has_many :categories, :through => :categorizations
+  has_many :categorizations, dependent: :destroy
+  has_many :categories, :through => :categorizations, after_remove: proc { |q| q.touch }
   has_many :favorite_quotes
   has_many :favorited_by, through: :favorite_quotes, source: :user  # users that favorite a quote
 
