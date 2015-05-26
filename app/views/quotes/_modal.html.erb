@@ -1,4 +1,4 @@
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="myModal<%= quote.id%>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -6,8 +6,10 @@
         <h4 class="modal-title" id="myModalLabel">Send a Tweet</h4>
       </div>
       <div class="modal-body">
+        <p id="notice"><%= notice %></p>
+        <div id="alert-placeholder"></div>
         <% if !current_user.nil? && !current_user.provider.nil? && current_user.provider.include?("twitter") %>
-            <%= quote %>
+            <%= render partial: 'tweets/form', locals: {tweet: tweet, quote: quote} %>
         <% else %>
             <p>You must log in to send a tweet.</p>
             <%= link_to "Sign in with Twitter", user_omniauth_authorize_path(:twitter) %>
