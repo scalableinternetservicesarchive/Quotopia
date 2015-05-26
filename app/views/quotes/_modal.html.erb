@@ -9,7 +9,7 @@
         <p id="notice"><%= notice %></p>
         <div id="alert-placeholder"></div>
         <% if !current_user.nil? && !current_user.provider.nil? && current_user.provider.include?("twitter") %>
-            <%= render partial: 'tweets/form', locals: {tweet: tweet, quote: quote} %>
+            <%= render partial: 'tweets/form', locals: {tweet: tweet, quote: quote, id: "myModal#{quote.id}"} %>
         <% else %>
             <p>You must log in to send a tweet.</p>
             <%= link_to "Sign in with Twitter", user_omniauth_authorize_path(:twitter) %>
