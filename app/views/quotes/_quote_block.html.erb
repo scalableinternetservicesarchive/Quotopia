@@ -44,12 +44,13 @@
                     <span class="fa fa-2x fa-heart-o" aria-hidden="true"></span>
                 </button>
             <% end %>
-          <form action="<%= quote_path(quote.id)%>">
-            <button type="submit" class="btn btn-default" formtarget="_blank">
-              <span class="fa fa-2x fa-comment" aria-hidden="true"></span>
-          </form>
+            <!--<button type="button" class="btn btn-default" data-toggle="modal">-->
+                 <!--<span class="fa fa-2x fa-twitter" aria-hidden="true" data-toggle="modal"></span>-->
+                 <%= link_to "Tweet", 'quotes/modal', remote: true, class:"fa fa-2x fa-twitter", data: { toggle: "modal", target: "#myModal" } %>
+                 <%= render partial: "quotes/modal", locals: {quote: quote} %>
+            <!--</button>-->
             </div>
-        </div>
+            </div>
         </div>
     </div>
 

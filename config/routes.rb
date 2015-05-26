@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get '/twitter/callback', to: 'sessions#create'
   post '/tweets/create', to: 'tweets#create'
   get '/tweets/error', to: 'tweets#error'
+  get '/quotes/modal', to: 'quotes#modal'
 
   resources :authentications
   get 'home/index'
