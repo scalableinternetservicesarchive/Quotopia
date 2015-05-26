@@ -87,7 +87,7 @@ class SearchesController < ApplicationController
                 fields: {
                     name: {
                         fragment_size: 10,
-                        number_of_fragments: 3,
+                        number_of_fragments: 0,
                         no_match_size: 20
                     },
                     content: {
