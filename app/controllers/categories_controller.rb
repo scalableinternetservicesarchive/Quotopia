@@ -21,7 +21,7 @@ class CategoriesController < ApplicationController
   # GET /categories/1.json
   def show
     @quotes = @category.quotes.joins(:author)
-                              .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id")
+                              .select("quotes.id, quotes.content, quotes.updated_at, authors.name as author_name, authors.id as author_id")
                               .all
                               .page(params[:page])
   end
