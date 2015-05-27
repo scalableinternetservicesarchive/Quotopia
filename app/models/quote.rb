@@ -1,3 +1,5 @@
+require 'digest/md5'
+
 class Quote < ActiveRecord::Base
   belongs_to :author
   # belongs_to :submitter, class_name: 'User', foreign_key: 'user_id' if keep tracking of user-submissions does not work
@@ -20,6 +22,10 @@ class Quote < ActiveRecord::Base
 
   # This determines how many quotes to display per page
   paginates_per 7
+
+  # def self.cache_key
+  #   Digest::MD5.hexdigest "#{maximum(:updated_at)}.try(:to_i)-#{count}"
+  # end
 
 	def self.search(search)
     @quote = Quote.joins(:author, :categories)

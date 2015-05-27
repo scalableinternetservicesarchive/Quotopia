@@ -33,7 +33,13 @@ $(document).ready(function(){
 <div class="row" id="quotes">
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active">
-          <%= render partial: "quotes/quote_block", locals: {quotes: @quotes} %>
+          <%# cache(cache_key_for_quotes(@quotes, params[:tab], params[:page])) do %>
+              <% @quotes.each do |quote| %>
+                  <%#= cache cache_key_for_quote(quote, params[:tab], params[:page]) do %>
+                      <%= render partial: "quotes/quote_block", locals: {quote: quote} %>
+                  <%# end %>
+              <% end %>
+          <%# end %>
           <% unless @quotes.nil? %>
               <div class="pages">
                 <div class="left-arrow"><%= link_to_previous_page @quotes, '<i class="fa fa-angle-double-left fa-3x"></i>'.html_safe, :params => {:tab => @tab_id } %></div>

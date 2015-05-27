@@ -3,40 +3,39 @@
     author = nil if local_assigns[:author].nil?
     categories = nil if local_assigns[:categories].nil?
 %>
-<% quotes.each do |quote| %>
-    <%
-       @author_string = author.nil? ? quote.author_name : author
-       @categories_string = categories.nil? ? quote.categories.map {|c| '#' + c.content.gsub(/\s+/, "")}.join(' ') : "##{categories.content}"
-       @tweet_content = "#{quote.content} -#{@author_string} #{@categories_string}".truncate(140)
-    %>
-    <div class="quote row vertical-align">
-        <div class="row-same-height">
-        <div class="col-xs-2 col-xs-height col-middle vote vote-<%=quote.id%>">
-            <% if user_signed_in? %>
-                <%= render partial: "votes/quote_vote", locals: {quote: quote, current_user_id: current_user.id} %>
-            <% else %>
-                <span class="fa fa-2x fa-chevron-up gray" aria-hidden="true" data-toggle="tooltip" data-trigger="hover" title="Sign in to upvote"></span>
-                <h4 class="vote-count"><%= Vote.quote_count(quote.id) %> </h4>
-                <span class="fa fa-2x fa-chevron-down gray" aria-hidden="true" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Sign in to downvote"></span>
-            <% end %>
-        </div>
-        <div class="col-xs-8 col-xs-height quote-text panel panel-default center" id="quote-panel">
-            <% div_id = "quote_#{quote.id}" %>
-            <div onclick="location.href='<%=quote_path(quote.id)%>';" style="cursor: pointer;" class="panel-body quote-content no-highlight over">
-                <%= quote.content %>
-                <% if display_author %>
-                    <div class="author-name">-  <a class="no-bubble" href="<%= author_path(quote.author_id) %>"><%= quote.author_name %></a> </div>
+      <%
+         @author_string = author.nil? ? quote.author_name : author
+         @categories_string = categories.nil? ? quote.categories.map {|c| '#' + c.content.gsub(/\s+/, "")}.join(' ') : "##{categories.content}"
+         @tweet_content = "#{quote.content} -#{@author_string} #{@categories_string}".truncate(140)
+      %>
+    <% cache_unless (params[:tab].nil? || params[:tab] == "trending"), cache_key_for_quote(quote, params[:tab], params[:page]) do %>
+        <div class="quote row vertical-align">
+            <div class="row-same-height">
+            <div class="col-xs-2 col-xs-height col-middle vote vote-<%=quote.id%>">
+                <% if user_signed_in? %>
+                    <%= render partial: "votes/quote_vote", locals: {quote: quote, current_user_id: current_user.id} %>
+                <% else %>
+                    <span class="fa fa-2x fa-chevron-up gray" aria-hidden="true" data-toggle="tooltip" data-trigger="hover" title="Sign in to upvote"></span>
+                    <h4 class="vote-count"><%= Vote.quote_count(quote.id) %> </h4>
+                    <span class="fa fa-2x fa-chevron-down gray" aria-hidden="true" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Sign in to downvote"></span>
                 <% end %>
-                <br>
-              <%= javascript_tag do %>
-                  $('.no-bubble').click(function(event) {
-                    event.stopImmediatePropagation();
-                  });
-
-              <% end %>
             </div>
-        </div>
-        
+            <div class="col-xs-8 col-xs-height quote-text panel panel-default center" id="quote-panel">
+                <% div_id = "quote_#{quote.id}" %>
+                <div onclick="location.href='<%=quote_path(quote.id)%>';" style="cursor: pointer;" class="panel-body quote-content no-highlight over">
+                    <%= quote.content %>
+                    <% if display_author %>
+                        <div class="author-name">-  <a class="no-bubble" href="<%= author_path(quote.author_id) %>"><%= quote.author_name %></a> </div>
+                    <% end %>
+                    <br>
+                  <%= javascript_tag do %>
+                      $('.no-bubble').click(function(event) {
+                        event.stopImmediatePropagation();
+                      });
+
+                  <% end %>
+                </div>
+            </div>
     <div class="col-xs-2 col-xs-height col-middle center quote-buttons">
         <div class="quote-buttons">
             <% if user_signed_in? %>
@@ -59,5 +58,5 @@
             </div>
         </div>
     </div>
-
 <% end %>
+
