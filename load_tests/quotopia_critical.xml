@@ -65,6 +65,7 @@
       <setdynvars sourcetype="file" fileid="users" delimiter="," order="random">
        <var name="user_name"/>
        <var name="user_password"/>
+        <var name="user_id"/>
       </setdynvars>
 
       <request>
@@ -111,15 +112,37 @@
       <!--</foreach>-->
 
       <!-- Comment on 5 random quotes within the first 20 quotes-->
+      <!--<for from="1" to="5" var="counter">-->
+        <!--<setdynvars sourcetype="random_number" start="1" end="20">-->
+          <!--<var name="random_quote_id"/>-->
+        <!--</setdynvars>-->
+        <!--<setdynvars sourcetype="random_string" length="100">-->
+          <!--<var name="comment_content"/>-->
+        <!--</setdynvars>-->
+        <!--<request subst="true">-->
+          <!--<http url="/quotes/%%_random_quote_id%%/comments" version="1.1" method="POST" contents="utf8=%E2%9C%93&amp;authenticity_token=12345&amp;comment%5Bcontent%5D=%%_comment_content%%&amp;button=">-->
+          <!--</http>-->
+        <!--</request>-->
+      <!--</for>-->
+
+      <!-- Upvote on 5 random quotes -->
       <for from="1" to="5" var="counter">
-        <setdynvars sourcetype="random_number" start="1" end="20">
+        <setdynvars sourcetype="random_number" start="10" end="30">
           <var name="random_quote_id"/>
         </setdynvars>
-        <setdynvars sourcetype="random_string" length="100">
-          <var name="comment_content"/>
+        <request subst="true">
+          <http url="/votes" version="1.1" method="POST" contents="vote%5Bquote_id%5D=%%_random_quote_id%%&amp;vote%5Buser_id%5D=%%_user_id%%&amp;vote%5Bvalue%5D=1">
+          </http>
+        </request>
+      </for>
+
+      <!-- Downvote on 5 random quotes -->
+      <for from="1" to="5" var="counter">
+        <setdynvars sourcetype="random_number" start="40" end="60">
+          <var name="random_quote_id"/>
         </setdynvars>
         <request subst="true">
-          <http url="/quotes/%%_random_quote_id%%/comments" version="1.1" method="POST" contents="utf8=%E2%9C%93&amp;authenticity_token=12345&amp;comment%5Bcontent%5D=%%_comment_content%%&amp;button=">
+          <http url="/votes" version="1.1" method="POST" contents="vote%5Bquote_id%5D=%%_random_quote_id%%&amp;vote%5Buser_id%5D=%%_user_id%%&amp;vote%5Bvalue%5D=-1">
           </http>
         </request>
       </for>
