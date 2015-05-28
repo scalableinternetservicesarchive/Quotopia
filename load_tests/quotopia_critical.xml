@@ -65,12 +65,8 @@
       <setdynvars sourcetype="file" fileid="users" delimiter="," order="random">
        <var name="user_name"/>
        <var name="user_password"/>
-      </setdynvars>
-
-      <setdynvars sourcetype="file" fileid="voted_quotes" delimiter="," order="iter">
-        <var name="vote_value"/>
-        <var name="vote_user_id"/>
-        <var name="vote_quote_id"/>
+        <var name="user_password_confirmation"/>
+        <var name="user_id"/>
       </setdynvars>
 
       <request>
@@ -104,17 +100,53 @@
 
       <!-- Get list of all time quotes on first page -->
       <request subst="true">
-        <dyn_variable name="alltime_quotes" jsonpath="Result[*].id"/>
+        <dyn_variable name="alltime_quotes" jsonpath="[*].id"/>
         <http url="/home/index.json?tab=all-time"/>
       </request>
 
-      <!-- Iterate over list and visit each quote for 2 seconds -->
+      <!-- Iterate over list and visit each quote for 5 seconds -->
       <foreach name="quote_id" in="alltime_quotes">
         <request subst="true">
           <http url="/quotes/%%_quote_id%%" version="1.1" method="GET"/>
         </request>
-        <thinktime value="2" random="true"/>
+        <thinktime value="5" random="true"/>
       </foreach>
+
+      <!-- Comment on 5 random quotes within the first 20 quotes-->
+      <for from="1" to="5" var="counter">
+        <setdynvars sourcetype="random_number" start="1" end="20">
+          <var name="random_quote_id"/>
+        </setdynvars>
+        <setdynvars sourcetype="random_string" length="100">
+          <var name="comment_content"/>
+        </setdynvars>
+        <request subst="true">
+          <http url="/quotes/%%_random_quote_id%%/comments" version="1.1" method="POST" contents="utf8=%E2%9C%93&amp;authenticity_token=12345&amp;comment%5Bcontent%5D=%%_comment_content%%&amp;button=">
+          </http>
+        </request>
+      </for>
+
+      <!-- Upvote on 5 random quotes -->
+      <for from="1" to="5" var="counter">
+        <setdynvars sourcetype="random_number" start="10" end="30">
+          <var name="random_quote_id"/>
+        </setdynvars>
+        <request subst="true">
+          <http url="/votes" version="1.1" method="POST" contents="vote%5Bquote_id%5D=%%_random_quote_id%%&amp;vote%5Buser_id%5D=%%_user_id%%&amp;vote%5Bvalue%5D=1">
+          </http>
+        </request>
+      </for>
+
+      <!-- Downvote on 5 random quotes -->
+      <for from="1" to="5" var="counter">
+        <setdynvars sourcetype="random_number" start="40" end="60">
+          <var name="random_quote_id"/>
+        </setdynvars>
+        <request subst="true">
+          <http url="/votes" version="1.1" method="POST" contents="vote%5Bquote_id%5D=%%_random_quote_id%%&amp;vote%5Buser_id%5D=%%_user_id%%&amp;vote%5Bvalue%5D=-1">
+          </http>
+        </request>
+      </for>
 
       <!-- Create a new quote -->
       <setdynvars sourcetype="random_string" length="55">
@@ -139,16 +171,19 @@
         <http url="/quotes?search=%%_quote_content%%" version="1.1" method="GET"/>
       </request>
 
-
-
-      <!-- Visit categories page
+      <!-- Visit categories page -->
       <request> <http url="/categories"/> </request>
       <thinktime value="2" random="true"/>
-      -->
 
       <!-- Visit authors page -->
       <request> <http url="/authors"/> </request>
       <thinktime value="1" random="true"/>
+
+      <!--<setdynvars sourcetype="eval" code="fun( {Pid, DynVars} ) ->-->
+        <!--io:format([126, $p, 126, $n, 126, $n], [DynVars]),-->
+        <!--ok end.">-->
+        <!--<var name="dump" />-->
+      <!--</setdynvars>-->
 
       </session>
     </sessions>
