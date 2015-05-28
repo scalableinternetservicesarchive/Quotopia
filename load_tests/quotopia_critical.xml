@@ -137,8 +137,10 @@
         <setdynvars sourcetype="random_string" length="100">
           <var name="comment_content"/>
         </setdynvars>
-        <http url="/quotes/%%_random_quote_id%%/comments" version="1.1" method="POST" contents="utf8=%E2%9C%93&amp;authenticity_token=12345&amp;comment%5Bcontent%5D=%%_comment_content%%&amp;button=">
-        </http>
+        <request subst="true">
+          <http url="/quotes/%%_random_quote_id%%/comments" version="1.1" method="POST" contents="utf8=%E2%9C%93&amp;authenticity_token=12345&amp;comment%5Bcontent%5D=%%_comment_content%%&amp;button=">
+          </http>
+        </request>
       </for>
 >>>>>>> Add commenting to tsung
 
