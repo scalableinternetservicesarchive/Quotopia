@@ -26,6 +26,7 @@
   <options>
     <option name="glocal_ack_timeout" value="2000"/>
     <option name="file_server" id="users" value="../data/users.csv"/>
+    <option name="file_server" id="voted_quotes" value="../data/votes.csv"/>
     <option type="ts_http" name="user_agent">
       <user_agent probability="100">Mozilla/5.0 (Windows; U; Windows NT 5.2; fr-FR; rv:1.7.8) Gecko/20050511 Firefox/1.0.4</user_agent>
     </option>
@@ -66,6 +67,12 @@
        <var name="user_password"/>
       </setdynvars>
 
+      <setdynvars sourcetype="file" fileid="voted_quotes" delimiter="," order="iter">
+        <var name="vote_value"/>
+        <var name="vote_user_id"/>
+        <var name="vote_quote_id"/>
+      </setdynvars>
+
       <request>
         <http url="/" version="1.1" method="GET"/>
       </request>
@@ -94,6 +101,20 @@
       <!-- Visit first page of all time quotes -->
       <request> <http url="/?tab=all-time"/> </request>
       <thinktime value="2" random="true"/>
+
+      <!-- Get list of all time quotes on first page -->
+      <request subst="true">
+        <dyn_variable name="alltime_quotes" jsonpath="Result[*].id"/>
+        <http url="/home/index.json?tab=all-time"/>
+      </request>
+
+      <!-- Iterate over list and visit each quote for 2 seconds -->
+      <foreach name="quote_id" in="alltime_quotes">
+        <request subst="true">
+          <http url="/quotes/%%_quote_id%%" version="1.1" method="GET"/>
+        </request>
+        <thinktime value="2" random="true"/>
+      </foreach>
 
       <!-- Create a new quote -->
       <setdynvars sourcetype="random_string" length="55">
