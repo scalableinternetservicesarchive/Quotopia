@@ -9547,3 +9547,10 @@ Categorization.create!([
   {quote_id: 3921, category_id: 2267},
   {quote_id: 3922, category_id: 171}
 ])
+
+# populate Votes with random value for 50 users on 5 quotes
+votes_file = File.read('data/votes.csv')
+votes_csv = CSV.parse(votes_file)
+votes_csv.each do |row|
+  Vote.create!(value: row[0], user_id: row[1], quote_id: row[2])
+end

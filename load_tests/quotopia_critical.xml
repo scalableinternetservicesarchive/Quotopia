@@ -118,6 +118,8 @@
         <http url="/quotes?search=%%_quote_content%%" version="1.1" method="GET"/>
       </request>
 
+
+
       <!-- Visit categories page
       <request> <http url="/categories"/> </request>
       <thinktime value="2" random="true"/>

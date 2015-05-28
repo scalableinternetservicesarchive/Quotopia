@@ -34,6 +34,11 @@ class HomeController < ApplicationController
                        .all.page(params[:page])
 
        @tab_id = "trending"
-      end
+    end
+
+    respond_to do |format|
+      format.html
+      format.json {render json: @quotes}
+    end
   end
 end
