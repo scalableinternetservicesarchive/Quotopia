@@ -45,3 +45,5 @@ checkOverflow = function() {
 
 $(document).ready(checkOverflow);
 $(document).on('page:load', checkOverflow);
+$("#myModal").html("<%= escape_javascript(render 'modal') %>");
+$('#myModal').modal('show')

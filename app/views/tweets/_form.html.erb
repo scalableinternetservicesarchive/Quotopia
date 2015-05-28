@@ -2,6 +2,7 @@
 <div class="form-group">
   <label for="tweetMsg">Maximum 140 characters</label>
   <%= text_field_tag "message", tweet, required: true, :pattern => ".{0,140}", size: 140, maxlength: 140, class: "form-control" %>
+  <%= hidden_field_tag "id", id %>
 </div>
 <%= submit_tag "Send Tweet", class: "btn btn-primary btn-sm" %>
 <% end %>

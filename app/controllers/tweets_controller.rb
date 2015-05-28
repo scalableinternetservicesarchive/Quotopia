@@ -8,15 +8,15 @@ class TweetsController < ApplicationController
       current_user.tweet(twitter_params[:message])
       respond_to do |format|
         if current_user.twitter_errors.nil?
-          format.js {render action: "success"}
+          format.js {render action: "success", locals: {id: twitter_params[:id]}}
         else
-          format.js {render action: "failure"}
+          format.js {render action: "failure", locals: {id: twitter_params[:id]}}
         end
       end
       return
   end
 
   def twitter_params
-    params.permit(:message)
+    params.permit(:message, :id)
   end
 end
