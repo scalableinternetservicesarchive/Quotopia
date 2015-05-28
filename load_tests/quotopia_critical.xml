@@ -183,8 +183,8 @@
       </request>
 
       <!-- Visit categories page -->
-      <request> <http url="/categories"/> </request>
-      <thinktime value="2" random="true"/>
+  <!--    <request> <http url="/categories"/> </request>
+      <thinktime value="2" random="true"/> -->
 
       <!-- Visit authors page -->
       <request> <http url="/authors"/> </request>

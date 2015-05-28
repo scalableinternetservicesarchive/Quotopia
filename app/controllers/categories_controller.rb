@@ -5,12 +5,16 @@ class CategoriesController < ApplicationController
   # GET /categories
   # GET /categories.json
   def index
-    @categories = Category.all
     @sorted = Category.select("categories.*, sum((case when categorizations.category_id is not null then 1 else 0 end)) AS category_count")
                   .joins("LEFT JOIN categorizations ON categorizations.category_id = categories.id")
                   .group(:id)
                   .order("category_count DESC, created_at")
     @category = Category.new
+
+    respond_to do |format|
+      format.html
+      format.json {render json: @sorted}
+    end
   end
 
   # GET /categories/1
