@@ -116,6 +116,53 @@
         <thinktime value="2" random="true"/>
       </foreach>
 
+      <!-- Comment on 5 random quotes within the first 30 quotes-->
+      <for from="1" to="5" var="counter">
+        <setdynvars sourcetype="random_number" start="1" end="30">
+          <var name="random_quote_id"/>
+        </setdynvars>
+        <setdynvars sourcetype="random_string" length="100">
+          <var name="comment_content"/>
+        </setdynvars>
+        <request subst="true">
+          <http url="/quotes/%%_random_quote_id%%/comments" version="1.1" method="POST" contents="utf8=%E2%9C%93&amp;authenticity_token=12345&amp;comment%5Bcontent%5D=%%_comment_content%%&amp;button=">
+          </http>
+        </request>
+      </for>
+
+      <!-- Upvote on 5 random quotes -->
+      <for from="1" to="5" var="counter">
+        <setdynvars sourcetype="random_number" start="10" end="50">
+          <var name="random_quote_id"/>
+        </setdynvars>
+        <request subst="true">
+          <http url="/votes" version="1.1" method="POST" contents="vote%5Bquote_id%5D=%%_random_quote_id%%&amp;vote%5Buser_id%5D=%%_user_id%%&amp;vote%5Bvalue%5D=1">
+          </http>
+        </request>
+      </for>
+
+      <!-- Downvote on 5 random quotes -->
+      <for from="1" to="5" var="counter">
+        <setdynvars sourcetype="random_number" start="40" end="80">
+          <var name="random_quote_id"/>
+        </setdynvars>
+        <request subst="true">
+          <http url="/votes" version="1.1" method="POST" contents="vote%5Bquote_id%5D=%%_random_quote_id%%&amp;vote%5Buser_id%5D=%%_user_id%%&amp;vote%5Bvalue%5D=-1">
+          </http>
+        </request>
+      </for>
+
+      <!-- Favorite on 3 random quotes -->
+      <for from="1" to="3" var="counter">
+        <setdynvars sourcetype="random_number" start="10" end="50">
+          <var name="random_quote_id"/>
+        </setdynvars>
+        <request subst="true">
+          <http url="/favorite_quotes" version="1.1" method="POST" contents="utf8=%E2%9C%93&amp;favorite_quote%5Bquote_id%5D=%%_random_quote_id%%&amp;favorite_quote%5Buser_id%5D=%%_user_id%%&amp;button=">
+          </http>
+        </request>
+      </for>
+
       <!-- Create a new quote -->
       <setdynvars sourcetype="random_string" length="55">
         <var name="quote_content"/>
@@ -139,12 +186,9 @@
         <http url="/quotes?search=%%_quote_content%%" version="1.1" method="GET"/>
       </request>
 
-
-
-      <!-- Visit categories page
+      <!-- Visit categories page -->
       <request> <http url="/categories"/> </request>
       <thinktime value="2" random="true"/>
-      -->
 
       <!-- Visit authors page -->
       <request> <http url="/authors"/> </request>
