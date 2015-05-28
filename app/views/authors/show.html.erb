@@ -1,10 +1,11 @@
 <p id="notice"><%= notice %></p>
+<div id="alert-placeholder"></div>
 
 <h2> <%="What has #{@author.name} said?"%></h2>
 <hr>
 
 <ul>
-    <%= render partial: "quotes/quote_block", locals: {quotes: @author_quotes, display_author: false} %>
+    <%= render partial: "quotes/quote_block", locals: {quotes: @author_quotes, display_author: false, author: @author.name} %>
 </ul>
 
 <!--<%= link_to 'Edit', edit_author_path(@author) %> -->

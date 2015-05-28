@@ -1,7 +1,26 @@
 <% 
-    display_author = true if local_assigns[:display_author].nil? 
+    display_author = true if local_assigns[:display_author].nil?
+    author = nil if local_assigns[:author].nil?
+    categories = nil if local_assigns[:categories].nil?
 %>
 <% quotes.each do |quote| %>
+    <%
+         @tweet_content = nil
+         if !author.nil?
+            @tweet_content = "#{quote.content} -#{author} "
+            for c in quote.categories do
+                @tweet_content = @tweet_content + "#" + c.content
+            end
+            @tweet_content.truncate(140)
+         elsif !categories.nil?
+            @tweet_content = "#{quote.content} -#{quote.author_name}" + " #" + categories.content
+         else
+            @tweet_content = "#{quote.content} -#{quote.author_name} "
+            for c in quote.categories do
+                @tweet_content = @tweet_content + "#" + c.content
+            end
+         end
+    %>
     <div class="quote row vertical-align">
         <div class="row-same-height">
         <div class="col-xs-2 col-xs-height col-middle vote vote-<%=quote.id%>">
@@ -47,7 +66,7 @@
                  <button href="#myModal<%= quote.id%>" role="button" class="btn btn-default" data-toggle="modal" data-target="#myModal<%= quote.id%>">
                     <span class="fa fa-2x fa-twitter" aria-hidden="true"></span>
                  </button>
-                 <%= render partial: "quotes/modal", locals: {quote: quote, tweet:quote.content + ' - ' + quote.author_name  } %>
+                 <%= render partial: "quotes/modal", locals: {quote: quote, tweet:@tweet_content } %>
             </div>
             </div>
         </div>

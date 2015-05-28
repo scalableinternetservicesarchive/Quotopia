@@ -1,10 +1,11 @@
 <p id="notice"><%= notice %></p>
+<div id="alert-placeholder"></div>
 
 <h2> <%="What's #{@category.content.capitalize}?"%></h2>
 <hr>
 
 <ul>
-  <%= render partial: "quotes/quote_block", locals: {quotes: @quotes} %>
+  <%= render partial: "quotes/quote_block", locals: {quotes: @quotes, categories: @category} %>
 </ul>
 
 <!--<%= link_to 'Edit', edit_category_path(@category) %> |-->

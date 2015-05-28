@@ -6,17 +6,16 @@
         <h4 class="modal-title" id="myModalLabel">Send a Tweet</h4>
       </div>
       <div class="modal-body">
-        <p id="notice"><%= notice %></p>
-        <div id="alert-placeholder"></div>
-        <% if !current_user.nil? && !current_user.provider.nil? && current_user.provider.include?("twitter") %>
-            <%= render partial: 'tweets/form', locals: {tweet: tweet, quote: quote, id: "myModal#{quote.id}"} %>
-        <% else %>
-            <p>You must log in to send a tweet.</p>
-            <%= link_to "Sign in with Twitter", user_omniauth_authorize_path(:twitter) %>
-        <% end %>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <div class="container-fluid">
+            <div class="row">
+              <% if !current_user.nil? && !current_user.provider.nil? && current_user.provider.include?("twitter") %>
+                  <%= render partial: 'tweets/form', locals: {tweet: tweet, quote: quote, id: "myModal#{quote.id}"} %>
+              <% else %>
+                  <p>You must log in to send a tweet.</p>
+                  <%= link_to "Sign in with Twitter", user_omniauth_authorize_path(:twitter) %>
+              <% end %>
+            </div>
+        </div>
       </div>
     </div>
   </div>
