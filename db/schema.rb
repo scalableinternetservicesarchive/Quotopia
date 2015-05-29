@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150529061715) do
+ActiveRecord::Schema.define(version: 20150529062935) do
 
   create_table "authors", force: :cascade do |t|
     t.text     "name",       limit: 65535
@@ -20,9 +20,10 @@ ActiveRecord::Schema.define(version: 20150529061715) do
   end
 
   create_table "categories", force: :cascade do |t|
-    t.string   "content",    limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.string   "content",     limit: 255
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.integer  "quote_count", limit: 4,   default: 0, null: false
   end
 
   add_index "categories", ["content"], name: "index_categories_on_content", unique: true, using: :btree
@@ -135,6 +136,18 @@ ActiveRecord::Schema.define(version: 20150529061715) do
       on("votes").
       after(:delete) do
     "UPDATE quotes SET vote_count = vote_count - OLD.value WHERE id = OLD.quote_id;"
+  end
+
+  create_trigger("categorizations_after_insert_row_tr", :generated => true, :compatibility => 1).
+      on("categorizations").
+      after(:insert) do
+    "UPDATE categories SET quote_count = quote_count + 1 WHERE NEW.category_id =  id;"
+  end
+
+  create_trigger("categorizations_after_delete_row_tr", :generated => true, :compatibility => 1).
+      on("categorizations").
+      after(:delete) do
+    "UPDATE categories SET quote_count = quote_count - 1 WHERE OLD.category_id = id;"
   end
 
 end
