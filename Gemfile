@@ -46,6 +46,9 @@ gem 'omniauth-twitter'
 gem 'twitter'
 gem 'omniauth'
 
+# for mysql Triggers
+gem 'hairtrigger'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
@@ -54,7 +57,7 @@ group :development, :test do
   gem 'web-console', '~> 2.0'
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
+  gem 'spring','~> 1.3.6'
 
   gem 'stackprof'
   # Rack mini profile for performance monitoring

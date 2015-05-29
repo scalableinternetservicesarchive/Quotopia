@@ -1,14 +1,23 @@
 class CategoriesController < ApplicationController
   before_action :set_category, only: [:show, :edit, :update, :destroy]
   before_filter :authenticate_user!, :only => [:new, :edit, :update, :destroy]
+  
+  def category_ajax
+    # note that there are 3 columns in this table:
+    # Rank | Name | Quotes  
+    @draw = params[:draw]
+    @start = params[:start] #row index to start at (0-indexed)
+    @length = params[:length] # the number of results to return
+    @search = params[:search]["value"] #the search query to filter over
+    @order = params[:order] # ordering information
+    @columns = params[:columns] # column information
+
+  end
 
   # GET /categories
   # GET /categories.json
   def index
-    @sorted = Category.select("categories.*, sum((case when categorizations.category_id is not null then 1 else 0 end)) AS category_count")
-                  .joins("LEFT JOIN categorizations ON categorizations.category_id = categories.id")
-                  .group(:id)
-                  .order("category_count DESC, created_at")
+    @sorted = Category.order(quote_count: :desc, updated_at: :asc)
     @category = Category.new
 
     respond_to do |format|
