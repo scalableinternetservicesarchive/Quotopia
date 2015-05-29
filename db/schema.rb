@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150529044058) do
+ActiveRecord::Schema.define(version: 20150529061715) do
 
   create_table "authors", force: :cascade do |t|
     t.text     "name",       limit: 65535
@@ -128,7 +128,13 @@ ActiveRecord::Schema.define(version: 20150529044058) do
       on("votes").
       after(:update).
       of(:value) do
-    "UPDATE quotes SET vote_count = vote_count + NEW.value WHERE id = NEW.quote_id;"
+    "UPDATE quotes SET vote_count = vote_count + (NEW.value - OLD.value) WHERE id = NEW.quote_id;"
+  end
+
+  create_trigger("votes_after_delete_row_tr", :generated => true, :compatibility => 1).
+      on("votes").
+      after(:delete) do
+    "UPDATE quotes SET vote_count = vote_count - OLD.value WHERE id = OLD.quote_id;"
   end
 
 end

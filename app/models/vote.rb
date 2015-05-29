@@ -12,13 +12,17 @@ class Vote < ActiveRecord::Base
   validates :user, uniqueness: {scope: :quote,
                  message: "a vote for a quote should be unique per user"}
 
-  #trigger.after(:insert) do
-  #  "UPDATE quotes SET vote_count = vote_count + NEW.value WHERE id = NEW.quote_id;"
-  #end
+  trigger.after(:insert) do
+    "UPDATE quotes SET vote_count = vote_count + NEW.value WHERE id = NEW.quote_id;"
+  end
 
-  #trigger.after(:update).of(:value) do
-  #  "UPDATE quotes SET vote_count = vote_count + NEW.value WHERE id = NEW.quote_id;"
-  #end
+  trigger.after(:update).of(:value) do
+    "UPDATE quotes SET vote_count = vote_count + (NEW.value - OLD.value) WHERE id = NEW.quote_id;"
+  end
+
+  trigger.after(:delete) do
+      "UPDATE quotes SET vote_count = vote_count - OLD.value WHERE id = OLD.quote_id;"
+  end
 
   def self.quote_count(requested_quote_id)
     #@votes = Vote.where(quote_id: requested_quote_id)
