@@ -17,10 +17,7 @@ class CategoriesController < ApplicationController
   # GET /categories
   # GET /categories.json
   def index
-    @sorted = Category.select("categories.*, sum((case when categorizations.category_id is not null then 1 else 0 end)) AS category_count")
-                  .joins("LEFT JOIN categorizations ON categorizations.category_id = categories.id")
-                  .group(:id)
-                  .order("category_count DESC, created_at")
+    @sorted = Category.order(quote_count: :desc, created_at: :desc)
     @category = Category.new
 
     respond_to do |format|
