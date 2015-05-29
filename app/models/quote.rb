@@ -21,7 +21,20 @@ class Quote < ActiveRecord::Base
   # This determines how many quotes to display per page
   paginates_per 7
 
-	def self.search(search)
+  trigger.after(:insert) do
+    "UPDATE authors SET quote_count = quote_count + 1 WHERE NEW.author_id = id;"
+  end
+
+  trigger.after(:update) do
+    "UPDATE authors SET quote_count = quote_count + 1 WHERE NEW.author_id = id;"\
+    "UPDATE authors SET quote_count = quote_count - 1 WHERE OLD.author_id = id;"
+  end
+
+  trigger.after(:delete) do
+    "UPDATE authors SET quote_count = quote_count - 1 WHERE OLD.author_id = id;"
+  end
+
+  def self.search(search)
     @quote = Quote.joins(:author, :categories)
                   .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id")
                   .where("categories.content LIKE ?", "#{search}")
@@ -47,6 +60,6 @@ class Quote < ActiveRecord::Base
     self.categories.collect do |category|
       category.content
       end.join(", ")
-    end
+  end
 
 end

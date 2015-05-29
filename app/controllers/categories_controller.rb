@@ -17,7 +17,7 @@ class CategoriesController < ApplicationController
   # GET /categories
   # GET /categories.json
   def index
-    @sorted = Category.order(quote_count: :desc, updated_at: :desc)
+    @sorted = Category.order(quote_count: :desc, updated_at: :asc)
     @category = Category.new
 
     respond_to do |format|
