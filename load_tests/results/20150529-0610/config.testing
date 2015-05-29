@@ -1,0 +1,3 @@
+m3.medium 2 app instances
+nginx + passenger w/o memcached
+
