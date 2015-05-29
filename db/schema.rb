@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150521051918) do
+ActiveRecord::Schema.define(version: 20150529044058) do
 
   create_table "authors", force: :cascade do |t|
     t.text     "name",       limit: 65535
@@ -62,10 +62,11 @@ ActiveRecord::Schema.define(version: 20150521051918) do
     t.text     "content",      limit: 65535
     t.integer  "author_id",    limit: 4
     t.integer  "user_id",      limit: 4
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
     t.string   "content_hash", limit: 255
     t.text     "extra",        limit: 65535
+    t.integer  "vote_count",   limit: 4,     default: 0, null: false
   end
 
   add_index "quotes", ["author_id", "content_hash"], name: "index_quotes_on_author_id_and_content_hash", unique: true, using: :btree
@@ -117,4 +118,17 @@ ActiveRecord::Schema.define(version: 20150521051918) do
   add_foreign_key "quotes", "users"
   add_foreign_key "votes", "quotes"
   add_foreign_key "votes", "users"
+  create_trigger("votes_after_insert_row_tr", :generated => true, :compatibility => 1).
+      on("votes").
+      after(:insert) do
+    "UPDATE quotes SET vote_count = vote_count + NEW.value WHERE id = NEW.quote_id;"
+  end
+
+  create_trigger("votes_after_update_of_value_row_tr", :generated => true, :compatibility => 1).
+      on("votes").
+      after(:update).
+      of(:value) do
+    "UPDATE quotes SET vote_count = vote_count + NEW.value WHERE id = NEW.quote_id;"
+  end
+
 end
