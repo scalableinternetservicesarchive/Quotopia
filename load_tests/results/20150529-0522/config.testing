@@ -1,2 +1,0 @@
-2 t1.micr app instances
-template: nginx + passenger w/o memcached multiinstance 
