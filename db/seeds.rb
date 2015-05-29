@@ -9554,3 +9554,11 @@ votes_csv = CSV.parse(votes_file)
 votes_csv.each do |row|
   Vote.create!(value: row[0], user_id: row[1], quote_id: row[2])
 end
+
+# populate Comments
+comments_file = File.read('data/comments.csv')
+comments_csv = CSV.parse(comments_file)
+comments_csv.each do |row|
+  Comment.create!(content: row[0], quote_id: row[1], user_id: row[2])
+end
+
