@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import csv
 import random
+import os.path
 
 def addCSVRow(value, user, quote):
 	print "ADDING value: %d user %d quote: %d" % (value, user, quote)
@@ -12,10 +13,16 @@ def addCSVRow(value, user, quote):
 			print e
 			print "UnicodeEncodeError: continuing to next quote"
 
-quote_id_list = random.sample(range(1,3000), 5)
-print quote_id_list
+def generateCSV():
+	quote_id_list = random.sample(range(1,3000), 5)
+	vote_prob = [1] * 80 + [-1] * 20			# User upvotes with 80% chance
 
-for user_id in xrange(1, 51):
-	for quote_id in quote_id_list:
-		value = random.choice([1, -1])
-		addCSVRow(value, user_id, quote_id)
+	if os.path.isfile('votes.csv'):
+		os.remove('votes.csv')
+
+	for user_id in xrange(1, 51):
+		for quote_id in quote_id_list:
+			value = random.choice(vote_prob)
+			addCSVRow(value, user_id, quote_id)
+
+generateCSV()
