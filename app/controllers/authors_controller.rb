@@ -13,8 +13,12 @@ class AuthorsController < ApplicationController
   def index
     @authors = getAuthorsOrdered
 
-    @authors2 = Author.all
     @author = Author.new
+
+    respond_to do |format|
+      format.html
+      format.json {render json: @authors}
+    end
   end
 
   # GET /authors/1

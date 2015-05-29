@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE tsung SYSTEM "/home/ec2-user/opt/tsung-1.5.0/share/tsung/tsung-1.0.dtd">
-<tsung loglevel="info" version="1.0" dumptraffic="true">
+<tsung loglevel="notice" version="1.0" dumptraffic="light">
 
   <clients>
     <client host="localhost" use_controller_vm="true" maxusers="15000"/>
@@ -183,8 +183,8 @@
       </request>
 
       <!-- Visit categories page -->
-      <request> <http url="/categories"/> </request>
-      <thinktime value="2" random="true"/>
+  <!--    <request> <http url="/categories"/> </request>
+      <thinktime value="2" random="true"/> -->
 
       <!-- Visit authors page -->
       <request> <http url="/authors"/> </request>

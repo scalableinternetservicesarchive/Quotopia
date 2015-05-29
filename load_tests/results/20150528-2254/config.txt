@@ -1,0 +1,1 @@
+m3.xlarge, nginx+passenger single
