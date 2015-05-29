@@ -58,8 +58,7 @@ group :development, :test do
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring','~> 1.3.6'
-
-  gem 'stackprof'
+  
   # Rack mini profile for performance monitoring
   gem 'rack-mini-profiler'
 
@@ -73,7 +72,7 @@ group :development, :test do
   gem 'faker'
 
   gem 'seed_dump'
-  # Dependency for flalemgraph
+  # Dependency for flamegraph
   gem 'stackprof'
 
   # Bullet finds where you can reduce queries
