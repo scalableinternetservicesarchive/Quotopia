@@ -17,23 +17,43 @@ class HomeController < ApplicationController
                      .all.page(params[:page])
         @tab_id = "new"
 
-     # default to trending if no tab paramenter
-     else
-       if ActiveRecord::Base.connection.adapter_name.downcase.starts_with? 'mysql'
-         @interval_check = "now() - INTERVAL 1 DAY"
-       else
-         @interval_check = "datetime('now','1 day')"
-       end
-
-       @quotes = Quote.joins("LEFT JOIN( select quote_id, sum(value) as
-         value_sum from votes WHERE created_at >= " + @interval_check +
-         " group by quote_id) as sums on quotes.id = sums.quote_id")
+    # default to trending if no tab paramenter
+    else
+      if ActiveRecord::Base.connection.adapter_name.downcase.starts_with? 'mysql'
+        @interval_check = "now() - INTERVAL 1 DAY"
+      else
+        @interval_check = "datetime('now','1 day')"
+      end
+      
+      if user_signed_in? 
+        @quotes = Quote.where("quotes.created_at >= " + @interval_check)
                        .joins(:author)
-                       .order("COALESCE(sums.value_sum,0) DESC")
-                       .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id")
+                       .joins("LEFT JOIN( select id as vote_id, quote_id, value as vote_value from votes 
+                               WHERE user_id = " + current_user.id.to_s + ") as user_votes on quotes.id = user_votes.quote_id")
+                       .order(vote_count: :desc)
+                       .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id, vote_id, vote_value, vote_count")
                        .all.page(params[:page])
 
-       @tab_id = "trending"
+        @user_signed_in = true
+        @current_user_id = current_user.id
+      else
+        @quotes = Quote.where("created_at >= " + @interval_check)
+                       .joins(:author)
+                       .order(vote_count: :desc)
+                       .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id, vote_value")
+                       .all.page(params[:page])
+        @user_signed_in = false 
+      end
+                           
+      #@quotes = Quote.joins("LEFT JOIN( select quote_id, sum(value) as
+      #  value_sum from votes WHERE created_at >= " + @interval_check +
+      #  " group by quote_id) as sums on quotes.id = sums.quote_id")
+      #                .joins(:author)
+      #                .order("COALESCE(sums.value_sum,0) DESC")
+      #                .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id")
+      #                .all.page(params[:page])
+
+      @tab_id = "trending"
     end
 
     respond_to do |format|

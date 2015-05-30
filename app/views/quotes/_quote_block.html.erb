@@ -12,8 +12,8 @@
     <div class="quote row vertical-align">
         <div class="row-same-height">
         <div class="col-xs-2 col-xs-height col-middle vote vote-<%=quote.id%>">
-            <% if user_signed_in? %>
-                <%= render partial: "votes/quote_vote", locals: {quote: quote, current_user_id: current_user.id} %>
+            <% if @user_signed_in %>
+                <%= render partial: "votes/quote_vote", locals: {quote: quote, vote_id: quote.vote_id, vote_value: quote.vote_value, current_user_id: @current_user_id} %>
             <% else %>
                 <span class="fa fa-2x fa-chevron-up gray" aria-hidden="true" data-toggle="tooltip" data-trigger="hover" title="Sign in to upvote"></span>
                 <h4 class="vote-count"><%= Vote.quote_count(quote.id) %> </h4>
