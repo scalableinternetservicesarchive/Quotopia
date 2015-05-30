@@ -11,13 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150530210311) do
+ActiveRecord::Schema.define(version: 20150530214815) do
 
   create_table "authors", force: :cascade do |t|
-    t.text     "name",        limit: 65535
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
-    t.integer  "quote_count", limit: 4,     default: 0, null: false
+    t.text     "name",        limit: 16777215
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
+    t.integer  "quote_count", limit: 4,        default: 0, null: false
   end
 
   create_table "categories", force: :cascade do |t|
@@ -40,11 +40,11 @@ ActiveRecord::Schema.define(version: 20150530210311) do
   add_index "categorizations", ["quote_id"], name: "index_categorizations_on_quote_id", using: :btree
 
   create_table "comments", force: :cascade do |t|
-    t.text     "content",    limit: 65535
+    t.text     "content",    limit: 16777215
     t.integer  "quote_id",   limit: 4
     t.integer  "user_id",    limit: 4
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
   add_index "comments", ["quote_id"], name: "index_comments_on_quote_id", using: :btree
@@ -61,14 +61,14 @@ ActiveRecord::Schema.define(version: 20150530210311) do
   add_index "favorite_quotes", ["user_id"], name: "index_favorite_quotes_on_user_id", using: :btree
 
   create_table "quotes", force: :cascade do |t|
-    t.text     "content",      limit: 65535
+    t.text     "content",      limit: 16777215
     t.integer  "author_id",    limit: 4
     t.integer  "user_id",      limit: 4
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
     t.string   "content_hash", limit: 255
-    t.text     "extra",        limit: 65535
-    t.integer  "vote_count",   limit: 4,     default: 0, null: false
+    t.text     "extra",        limit: 16777215
+    t.integer  "vote_count",   limit: 4,        default: 0, null: false
   end
 
   add_index "quotes", ["author_id", "content_hash"], name: "index_quotes_on_author_id_and_content_hash", unique: true, using: :btree
