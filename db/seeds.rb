@@ -1,5 +1,26 @@
+##
+# Populates the database with some quote/author/category seed data
+# Ensures at MOST ONE app server tries to seed the database using a flag
+# The first app server to try to seed will create the flag and subsequent servers
+# will back off it is already present.
+##
 require 'csv'
 
+# Ensure at most one app server seeds the db
+ActiveRecord::Base.transaction do
+  flagCreateStr = "CREATE TABLE SeedFlag(dummyCol int)"
+  flagCheckStr = "SHOW TABLES LIKE 'SeedFlag'"
+
+  flag = ActiveRecord::Base.connection.execute(flagCheckStr)
+  # If the flag table doesn't exist, this server will seed, otherwise exit(another server is seeding)
+  if (flag.size == 0) then
+    ActiveRecord::Base.connection.execute(flagCreateStr)
+  else
+    exit
+  end
+end
+
+# Start seeding now that we've set the seeding flag in the database
 # populate users with ~50 randomly generated models
 csv_text = File.read('data/users.csv')
 csv = CSV.parse(csv_text)
@@ -9561,4 +9582,3 @@ comments_csv = CSV.parse(comments_file)
 comments_csv.each do |row|
   Comment.create!(content: row[0], quote_id: row[1], user_id: row[2])
 end
-
