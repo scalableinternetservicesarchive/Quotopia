@@ -89,9 +89,6 @@ class FavoriteQuotesController < ApplicationController
              .order(vote_count: :desc)
              .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id, favorite_id, vote_id, vote_value, vote_count")
              .all
-    @user_signed_in = true
-    @current_user_id = current_user.id
-
   end
 
   private

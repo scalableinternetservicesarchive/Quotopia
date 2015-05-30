@@ -76,13 +76,6 @@ class HomeController < ApplicationController
       @tab_id = "trending"
     end
 
-    if user_signed_in?
-      @user_signed_in = true
-      @current_user_id = current_user.id
-    else
-      @user_signed_in = false
-    end
-
     respond_to do |format|
       format.html
       format.json {render json: @quotes}

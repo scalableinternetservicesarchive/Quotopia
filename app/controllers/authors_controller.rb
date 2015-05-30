@@ -30,13 +30,10 @@ class AuthorsController < ApplicationController
                               .select("quotes.id, quotes.content, favorite_id, vote_id, vote_value, vote_count")
                               .order(vote_count: :desc)
                               .all.page(params[:page])
-      @user_signed_in = true
-      @current_user_id = current_user.id
     else 
       @author_quotes = @author.quotes
                               .order(vote_count: :desc)
                               .all.page(params[:page])
-      @user_signed_in = false
     end
   end
 

@@ -40,9 +40,6 @@ class CategoriesController < ApplicationController
                          .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id, favorite_id, vote_id, vote_value, vote_count")
                          .all
                          .page(params[:page])
-
-      @user_signed_in = true
-      @current_user_id = current_user.id
     else
       @quotes = @category.quotes
                          .joins(:author)
@@ -50,7 +47,6 @@ class CategoriesController < ApplicationController
                          .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id, vote_count")
                          .all
                          .page(params[:page])
-      @user_signed_in = false
     end
   end
 
