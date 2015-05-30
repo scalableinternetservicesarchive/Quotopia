@@ -21,7 +21,21 @@ class AuthorsController < ApplicationController
   # GET /authors/1
   # GET /authors/1.json
   def show
-    @author_quotes = @author.quotes.all.page(params[:page])
+    if user_signed_in?
+      @author_quotes = @author.quotes
+                              .joins("LEFT JOIN( select id as vote_id, quote_id, value as vote_value from votes 
+                                                 WHERE user_id = " + current_user.id.to_s + ") as user_votes on quotes.id = user_votes.quote_id") 
+                              .select("quotes.id, quotes.content, vote_id, vote_value, vote_count")
+                              .order(vote_count: :desc)
+                              .all.page(params[:page])
+      @user_signed_in = true
+      @current_user_id = current_user.id
+    else 
+      @author_quotes = @author.quotes
+                              .order(vote_count: :desc)
+                              .all.page(params[:page])
+      @user_signed_in = false
+    end
   end
 
   # GET /authors/new
