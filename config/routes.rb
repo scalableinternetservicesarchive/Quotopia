@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   get '/search', to: 'searches#search'
   get '/typeahead', to: 'searches#typeahead'
 
+  get '/category_ajax', to: 'categories#category_ajax'
+
   resources :favorite_quotes
   resources :votes
   resources :categories
