@@ -1,7 +1,7 @@
-<!-- Needs favorite and current_user -->
+<!-- Needs quote_id, favorite_id and current_user -->
 <% @favorite_quote = FavoriteQuote.new %>
 
-<% if favorite.nil? %>
+<% if favorite_id.nil? %>
     <%= form_for(@favorite_quote, :html => {:class => "btn-group", :remote => true}) do |f| %>
         <%= f.hidden_field :quote_id, value: quote_id %>
         <%= f.hidden_field :user_id, value: current_user_id %>
@@ -12,7 +12,7 @@
 
     
 <% else %>
-    <%= form_for(favorite, :html => {:method => :delete, :class => "btn-group", :remote => true}) do |f| %>
+    <%= form_tag({controller: "favorite_quotes", action: "destroy", id: favorite_id}, method: "delete", class: "btn-group", remote: true) do |f| %>
         <%= button_tag(type: "submit", class: "btn btn-default") do %>
             <span class="fa fa-2x fa-heart" aria-hidden="true"></span>
         <% end %>
