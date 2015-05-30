@@ -9,7 +9,7 @@ module AuthorsHelper
   end
 
   def cache_key_for_author_table(authors)
-     max_updated_at = Author.maximum(:updated_at).try(:utc).try(:to_s, :number)
-    "authors/#{authors.length}/#{max_updated_at}"
+     # max_updated_at = Author.maximum(:updated_at).try(:utc).try(:to_s, :number)
+     "authors/#{authors.length}"
   end
 end

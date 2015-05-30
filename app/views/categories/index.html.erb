@@ -10,7 +10,9 @@
     <th>Quotes</th>
   </thead>
   <tbody>
-    <%= render partial: "category", locals: {categories: @sorted} %>
+    <%= cache cache_key_for_category_table(@sorted) do %>
+        <%= render partial: "category", locals: {categories: @sorted} %>
+    <% end%>
   </tbody>
 </table>
 
