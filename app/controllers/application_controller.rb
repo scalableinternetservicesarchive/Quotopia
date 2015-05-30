@@ -26,4 +26,8 @@ class ApplicationController < ActionController::Base
   def after_sign_out_path_for(resource)
     session[:previous_url] || root_path
   end
+
+  def allow_twitter()
+        !current_user.nil? && !current_user.provider.nil? && current_user.provider.include?("twitter")
+  end
 end

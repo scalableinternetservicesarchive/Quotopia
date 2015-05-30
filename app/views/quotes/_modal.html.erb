@@ -8,7 +8,7 @@
       <div class="modal-body">
         <div class="container-fluid">
             <div class="row">
-              <% if !current_user.nil? && !current_user.provider.nil? && current_user.provider.include?("twitter") %>
+              <% if @allow_twitter %>
                   <%= render partial: 'tweets/form', locals: {tweet: tweet, quote: quote, id: "myModal#{quote.id}"} %>
               <% else %>
                   <p>You must log in to send a tweet.</p>

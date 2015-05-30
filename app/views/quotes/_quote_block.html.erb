@@ -6,15 +6,22 @@
         @user_signed_in = false
     end
 
+    @allow_twitter = false
+    if !current_user.nil? && !current_user.provider.nil? && current_user.provider.include?("twitter")
+        @allow_twitter = true
+    end
+
     display_author = true if local_assigns[:display_author].nil?
     author = nil if local_assigns[:author].nil?
     categories = nil if local_assigns[:categories].nil?
 %>
 <% quotes.each do |quote| %>
     <%
-       @author_string = author.nil? ? quote.author_name : author
-       @categories_string = categories.nil? ? quote.categories.map {|c| '#' + c.content.gsub(/\s+/, "")}.join(' ') : "##{categories.content}"
-       @tweet_content = "#{quote.content} -#{@author_string} #{@categories_string}".truncate(140)
+        @author_string = author.nil? ? quote.author_name : author
+        if @allow_twitter    
+            @categories_string = categories.nil? ? quote.categories.map {|c| '#' + c.content.gsub(/\s+/, "")}.join(' ') : "##{categories.content}"
+            @tweet_content = "#{quote.content} -#{@author_string} #{@categories_string}".truncate(140)
+        end
     %>
     <div class="quote row vertical-align">
         <div class="row-same-height">
