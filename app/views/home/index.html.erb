@@ -35,9 +35,9 @@ $(document).ready(function(){
         <div role="tabpanel" class="tab-pane active">
           <%# cache(cache_key_for_quotes(@quotes, params[:tab], params[:page])) do %>
               <% @quotes.each do |quote| %>
-                  <%#= cache cache_key_for_quote(quote, params[:tab], params[:page]) do %>
+                  <%= cache cache_key_for_quote(quote, params[:tab], params[:page]) do %>
                       <%= render partial: "quotes/quote_block", locals: {quote: quote} %>
-                  <%# end %>
+                  <% end %>
               <% end %>
           <%# end %>
           <% unless @quotes.nil? %>

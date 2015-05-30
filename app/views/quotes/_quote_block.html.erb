@@ -8,7 +8,7 @@
          @categories_string = categories.nil? ? quote.categories.map {|c| '#' + c.content.gsub(/\s+/, "")}.join(' ') : "##{categories.content}"
          @tweet_content = "#{quote.content} -#{@author_string} #{@categories_string}".truncate(140)
       %>
-    <% cache_unless (params[:tab].nil? || params[:tab] == "trending"), cache_key_for_quote(quote, params[:tab], params[:page]) do %>
+    <%# cache_unless (params[:tab].nil? || params[:tab] == "trending"), cache_key_for_quote(quote, params[:tab], params[:page]) do %>
         <div class="quote row vertical-align">
             <div class="row-same-height">
             <div class="col-xs-2 col-xs-height col-middle vote vote-<%=quote.id%>">
@@ -58,5 +58,5 @@
             </div>
         </div>
     </div>
-<% end %>
+<%# end %>
 
