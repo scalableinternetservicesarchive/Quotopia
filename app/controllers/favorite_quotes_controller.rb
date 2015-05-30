@@ -79,14 +79,18 @@ class FavoriteQuotesController < ApplicationController
   # GET /favorite_quotes/user
   def user
     @user_favorites = 
-        Quote.joins(
-           "INNER JOIN(  select quote_id 
-            from favorite_quotes 
-            where user_id = #{current_user.id}) 
-            as favorites on quotes.id = favorites.quote_id")
-                .joins(:author)
-                .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id")
-                .all
+        Quote.joins("INNER JOIN(  select quote_id 
+                     from favorite_quotes 
+                     where user_id = #{current_user.id}) 
+                     as favorites on quotes.id = favorites.quote_id")
+             .joins(:author)
+             .joins("LEFT JOIN( SELECT id as vote_id, quote_id, value as vote_value from votes 
+                                WHERE user_id = " + current_user.id.to_s + ") as user_votes on quotes.id = user_votes.quote_id") 
+             .order(vote_count: :desc)
+             .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id, vote_id, vote_value, vote_count")
+             .all
+    @user_signed_in = true
+    @current_user_id = current_user.id
 
   end
 
