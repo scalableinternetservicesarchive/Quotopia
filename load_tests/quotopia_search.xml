@@ -6,10 +6,19 @@
   </clients>
 
   <servers>
-    <server host="quotopia.raycoll.me" port="80" type="tcp"/>
+    <server host="ec2-52-10-31-3.us-west-2.compute.amazonaws.com" port="80" type="tcp"/>
   </servers>
 
   <load>
+    <arrivalphase phase="1" duration="30" unit="second">
+      <users arrivalrate="1" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="2" duration="30" unit="second">
+      <users arrivalrate="2" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="3" duration="30" unit="second">
+      <users arrivalrate="4" unit="second"></users>
+    </arrivalphase>
     <arrivalphase phase="4" duration="30" unit="second">
       <users arrivalrate="8" unit="second"></users>
     </arrivalphase>
@@ -44,7 +53,7 @@
   </options>
 
   <sessions>
-    <session name="search" type="ts_http">
+    <session name="search" probability="100" type="ts_http">
       <request>
         <http url="/" version="1.1" method="GET"/>
       </request>
@@ -54,7 +63,7 @@
         <setdynvars sourcetype="file" fileid="search_str" delimiter="," order="random">
           <var name="search_param"/>
         </setdynvars>
-        <request>
+        <request subst="true">
           <http url="/search?utf8=%E2%9C%93&amp;q=%%_search_param%%" version="1.1" method="GET"/>
         </request>
         <thinktime value="2" random="true"/>
