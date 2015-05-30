@@ -3,10 +3,7 @@ class AuthorsController < ApplicationController
   before_filter :authenticate_user!, :only => [:new, :edit, :update, :destroy]
 
   def getAuthorsOrdered
-    @authors = Author.joins("LEFT JOIN quotes on quotes.author_id = authors.id")
-                     .select("authors.id as id, authors.name as author_name, count(quotes.author_id) as num_quotes")
-                     .group("authors.id")
-                     .order("num_quotes desc")
+    @authors = Author.order(quote_count: :desc, updated_at: :asc)
   end 
   # GET /authors
   # GET /authors.json

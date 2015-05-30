@@ -1,7 +1,7 @@
 <% authors.each_with_index do |author, index| %>
     <tr>
         <td><%= index+1 %></td>
-        <td><%= link_to author.author_name.titleize, author %></td>
-        <td><%= author.num_quotes %></td>
+        <td><%= link_to author.name.titleize, author %></td>
+        <td><%= author.quote_count %></td>
     </tr>
 <% end %>
