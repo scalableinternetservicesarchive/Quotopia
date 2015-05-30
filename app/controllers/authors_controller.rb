@@ -23,9 +23,11 @@ class AuthorsController < ApplicationController
   def show
     if user_signed_in?
       @author_quotes = @author.quotes
+                              .joins("LEFT JOIN( SELECT id as favorite_ID, quote_id from favorite_quotes 
+                                                 WHERE user_id = " + current_user.id.to_s + ") as favorites on quotes.id = favorites.quote_id")
                               .joins("LEFT JOIN( select id as vote_id, quote_id, value as vote_value from votes 
                                                  WHERE user_id = " + current_user.id.to_s + ") as user_votes on quotes.id = user_votes.quote_id") 
-                              .select("quotes.id, quotes.content, vote_id, vote_value, vote_count")
+                              .select("quotes.id, quotes.content, favorite_id, vote_id, vote_value, vote_count")
                               .order(vote_count: :desc)
                               .all.page(params[:page])
       @user_signed_in = true
