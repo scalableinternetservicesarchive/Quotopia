@@ -5,13 +5,13 @@
 <hr>
 <ul>
   <% @quotes.each do |quote| %>
-    <%= render partial: "quotes/quote_block", locals: {quote: quote, categories: @category} %>
+      <%= cache cache_key_for_category_quote(@category, quote, params[:page]) do %>
+        <%= render partial: "quotes/quote_block", locals: {quote: quote, categories: @category} %>
+      <% end %>
   <% end %>
 </ul>
 <% unless @quotes.nil? %>
     <div>
-      <!--<%= paginate @quotes, :params => {:tab => "categories"} %>-->
-      <!--<%= page_entries_info @quotes %>-->
       <div class="pages">
         <%= link_to_previous_page @quotes, '<i class="fa fa-angle-double-left fa-3x"></i>'.html_safe, {:class => "left-arrow"} %>
         <div class="page-number"><%= params[:page] %></div>
@@ -20,7 +20,4 @@
     </div>
 <% end %>
 
-<!--<div>-->
-  <!--<%= link_to 'Back', url_for(:action => 'index', :anchor => 'categories', :controller => 'home') %>-->
-<!--</div>-->
 
