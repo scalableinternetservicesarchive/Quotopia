@@ -37,10 +37,10 @@ class HomeController < ApplicationController
         @user_signed_in = true
         @current_user_id = current_user.id
       else
-        @quotes = Quote.where("created_at >= " + @interval_check)
+        @quotes = Quote.where("quotes.created_at >= " + @interval_check)
                        .joins(:author)
                        .order(vote_count: :desc)
-                       .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id, vote_value")
+                       .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id, vote_count")
                        .all.page(params[:page])
         @user_signed_in = false 
       end
