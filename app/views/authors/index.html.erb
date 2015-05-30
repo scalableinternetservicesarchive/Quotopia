@@ -12,7 +12,9 @@
   </thead>
 
   <tbody>
-    <%= render partial: "author", locals: {authors: @authors} %>
+    <%= cache cache_key_for_author_table(@authors) do %>
+        <%= render partial: "author", locals: {authors: @authors} %>
+    <% end %>
   </tbody>
 </table>
 
@@ -29,4 +31,3 @@
 <% if user_signed_in? %>
     <%= render 'authors/form', :object => @author %>
 <% end %>
-<!-- <%= link_to 'New Author', new_author_path %> -->
