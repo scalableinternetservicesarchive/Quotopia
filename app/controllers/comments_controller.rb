@@ -57,8 +57,8 @@ class CommentsController < ApplicationController
     end
   end
 
-  # DELETE /comments/1
-  # DELETE /comments/1.json
+  # DELETE /quotes/:quote_id/comments/1
+  # DELETE /quotes/:quote_id/comments/1.json
   def destroy
     @comment.destroy
     respond_to do |format|
