@@ -29,7 +29,8 @@ class CommentsController < ApplicationController
   # POST /comments.json
   def create
     @quote = Quote.find(params[:quote_id])
-    @comment = Comment.new(content: comment_params[:content], quote: @quote, user: current_user)
+    @user = (current_user.nil?) ? nil : current_user
+    @comment = Comment.new(content: comment_params[:content], quote: @quote, user: @user)
 
     respond_to do |format|
       if @comment.save
