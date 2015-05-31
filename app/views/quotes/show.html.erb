@@ -40,9 +40,9 @@
     <% end %>
 
     <% if !current_user.nil? %>
-    <%= render 'comments/form', :object => @comment %>
-    <hr>
+        <%= render 'comments/form', :object => @comment %>
     <% end %>
+    <hr>
 
     <% if !current_user.nil? && !current_user.provider.nil? && current_user.provider.include?("twitter") %>
         <!--<p>Click The link below to send a tweet.</p>-->
