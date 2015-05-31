@@ -7,7 +7,7 @@
   </clients>
 
   <servers>
-    <server host="quotopia.raycoll.me" port="80" type="tcp"/>
+    <server host="ec2-52-11-135-149.us-west-2.compute.amazonaws.com" port="80" type="tcp"/>
   </servers>
 
 
@@ -41,7 +41,7 @@
     </arrivalphase>
     <arrivalphase phase="10" duration="30" unit="second">
      <users arrivalrate="512" unit="second"></users>
-    </arrivalphase>
+    </arrivalphase> 
   </load>
 
       <options>
@@ -120,18 +120,30 @@
       <thinktime value="2" random="true"/>
 
       <!-- Get list of all time quotes on first page -->
-      <request subst="true">
+<!--      <request subst="true">
         <dyn_variable name="alltime_quotes" jsonpath="[*].id"/>
         <http url="/home/index.json?tab=all-time"/>
       </request>
-
+-->
       <!-- Iterate over list and visit each quote for 5 seconds -->
-      <foreach name="quote_id" in="alltime_quotes">
+<!--      <foreach name="quote_id" in="alltime_quotes">
         <request subst="true">
           <http url="/quotes/%%_quote_id%%" version="1.1" method="GET"/>
         </request>
         <thinktime value="5" random="true"/>
       </foreach>
+-->
+
+      <!-- Visit 10 random quotes -->
+      <for from="1" to="10" var="counter">
+	<setdynvars sourcetype="random_number" start="1" end="3000">
+	  <var name="random_quote_id"/>
+	</setdynvars>
+	<request subst="true">
+	  <http url="/quotes/%%_random_quote_id%%" version="1.1" method="GET"/>
+	</request>
+	<thinktime value="5" random="true"/>
+      </for>	
 
       <!-- Comment on 5 random quotes-->
       <for from="1" to="5" var="counter">
