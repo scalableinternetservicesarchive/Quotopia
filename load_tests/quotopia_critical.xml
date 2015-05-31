@@ -179,7 +179,7 @@
           </http>
         </request>
       </for>
-      
+
       <!-- Create a new quote -->
       <setdynvars sourcetype="random_string" length="55">
         <var name="quote_content"/>
