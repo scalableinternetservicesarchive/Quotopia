@@ -94,6 +94,19 @@ class VotesController < ApplicationController
     end
   end
 
+  # PUT /votes/:quote_id/:user_id
+  # PUT /votes/:quote_id/:user_id.json
+  def destroy_from_params
+    @vote = Vote.where(quote_id: params[:quote_id], user_id: params[:user_id]).first
+    if !@vote.nil?
+      @vote.destroy
+    end
+    respond_to do |format|
+      format.html { redirect_to votes_url, notice: 'Favorite quote  was successfully destroyed.' }
+      format.json { head :no_content }
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_vote
