@@ -1,6 +1,5 @@
 class VotesController < ApplicationController
   before_action :set_vote, only: [:show, :edit, :update, :destroy]
-  
 
   def quote_count
     @requested_quote_id = params[:quote_id]
