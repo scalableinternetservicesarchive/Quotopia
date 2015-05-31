@@ -30,7 +30,7 @@ class CommentsController < ApplicationController
   def create
     @quote = Quote.find(params[:quote_id])
     @userid = (current_user.nil?) ? nil : current_user.id
-    @comment = Comment.new(content: comment_params[:content], quote: @quote, user: @userid)
+    @comment = Comment.new(content: comment_params[:content], quote_id: @quote.id, user_id: @userid)
 
     respond_to do |format|
       if @comment.save
