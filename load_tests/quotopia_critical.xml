@@ -133,9 +133,9 @@
         <thinktime value="5" random="true"/>
       </foreach>
 
-      <!-- Comment on 5 random quotes within the first 30 quotes-->
+      <!-- Comment on 5 random quotes-->
       <for from="1" to="5" var="counter">
-        <setdynvars sourcetype="random_number" start="1" end="30">
+        <setdynvars sourcetype="random_number" start="1" end="3000">
           <var name="random_quote_id"/>
         </setdynvars>
         <setdynvars sourcetype="random_string" length="100">
@@ -149,7 +149,7 @@
 
       <!-- Upvote on 5 random quotes -->
       <for from="1" to="5" var="counter">
-        <setdynvars sourcetype="random_number" start="10" end="50">
+        <setdynvars sourcetype="random_number" start="1" end="3000">
           <var name="random_quote_id"/>
         </setdynvars>
         <request subst="true">
@@ -160,7 +160,7 @@
 
       <!-- Downvote on 5 random quotes -->
       <for from="1" to="5" var="counter">
-        <setdynvars sourcetype="random_number" start="60" end="100">
+        <setdynvars sourcetype="random_number" start="1" end="3000">
           <var name="random_quote_id"/>
         </setdynvars>
         <request subst="true">
@@ -171,7 +171,7 @@
 
       <!-- Favorite on 3 random quotes -->
       <for from="1" to="3" var="counter">
-        <setdynvars sourcetype="random_number" start="10" end="50">
+        <setdynvars sourcetype="random_number" start="1" end="3000">
           <var name="random_quote_id"/>
         </setdynvars>
         <request subst="true">
