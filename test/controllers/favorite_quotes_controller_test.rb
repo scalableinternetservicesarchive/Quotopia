@@ -2,7 +2,7 @@ require 'test_helper'
 
 class FavoriteQuotesControllerTest < ActionController::TestCase
   include Devise::TestHelpers
-  fixtures :users
+  fixtures :users, :quotes
 
   setup do
     @favorite_quote = favorite_quotes(:one)
@@ -21,7 +21,7 @@ class FavoriteQuotesControllerTest < ActionController::TestCase
 
   test "should create favorite_quote" do
     assert_difference('FavoriteQuote.count') do
-      post :create, favorite_quote: { quote_id: 1, user_id: users(:quotopia) }
+      post :create, favorite_quote: { quote_id: quotes(:one), user_id: users(:quotopia) }
     end
 
     assert_redirected_to favorite_quote_path(assigns(:favorite_quote))
