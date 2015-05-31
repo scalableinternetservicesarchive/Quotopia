@@ -14,6 +14,8 @@ Rails.application.routes.draw do
 
   get '/category_ajax', to: 'categories#category_ajax'
 
+  post 'comments/:content/:quote_id/:user_id', to: 'comments#destroy_from_params', as: 'comment_destroy'
+
   resources :favorite_quotes
   resources :votes
   resources :categories

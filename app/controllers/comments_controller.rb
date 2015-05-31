@@ -67,6 +67,17 @@ class CommentsController < ApplicationController
     end
   end
 
+  # POST /comments/:content/:quote_id/:user_id
+  # POST /comments/:content/:quote_id/:user_id.json
+  def destroy_from_params
+    @comment = Comment.where(content: params[:content], quote_id: params[:quote_id], user_id: params[:user_id]).first
+    @comment.destroy
+    respond_to do |format|
+      format.html { redirect_to quote_path(params[:quote_id]), notice: 'Comment was successfully destroyed.' }
+      format.json { head :no_content }
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_comment
