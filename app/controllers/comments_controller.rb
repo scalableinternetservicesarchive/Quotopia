@@ -67,8 +67,8 @@ class CommentsController < ApplicationController
     end
   end
 
-  # POST /comments/:content/:quote_id/:user_id
-  # POST /comments/:content/:quote_id/:user_id.json
+  # PUT /comments/:content/:quote_id/:user_id
+  # PUT /comments/:content/:quote_id/:user_id.json
   def destroy_from_params
     @comment = Comment.where(content: params[:content], quote_id: params[:quote_id], user_id: params[:user_id]).first
     @comment.destroy
