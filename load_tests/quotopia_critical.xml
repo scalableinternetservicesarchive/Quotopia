@@ -61,13 +61,13 @@
 
           <thinktime value="2" random="true"/>
 
-          <!-- Visit 4 more pages of trending -->
+      <!-- Visit 4 more pages of trending -->
       <for from="2" to="5" incr="1" var="pagenum">
         <request subst="true">
           <http url="/?page=%%_pagenum%%&amp;tab=trending" version="1.1" method="GET"/>
         </request>
         <thinktime value="2" random="true"/>
-    </for>
+      </for>
 
       <!-- Visit 5 pages of new quotes -->
       <for from="1" to="5" incr="1" var="pagenum">
@@ -136,13 +136,13 @@
 
       <!-- Visit 10 random quotes -->
       <for from="1" to="10" var="counter">
-	<setdynvars sourcetype="random_number" start="1" end="3000">
-	  <var name="random_quote_id"/>
-	</setdynvars>
-	<request subst="true">
-	  <http url="/quotes/%%_random_quote_id%%" version="1.1" method="GET"/>
-	</request>
-	<thinktime value="5" random="true"/>
+        <setdynvars sourcetype="random_number" start="1" end="3000">
+          <var name="random_quote_id"/>
+        </setdynvars>
+        <request subst="true">
+          <http url="/quotes/%%_random_quote_id%%" version="1.1" method="GET"/>
+        </request>
+        <thinktime value="3" random="true"/>
       </for>	
 
       <!-- Comment on 5 random quotes-->
@@ -157,6 +157,13 @@
           <http url="/quotes/%%_random_quote_id%%/comments" version="1.1" method="POST" contents="utf8=%E2%9C%93&amp;authenticity_token=12345&amp;comment%5Bcontent%5D=%%_comment_content%%&amp;button=">
           </http>
         </request>
+
+        <!-- Wait for up to 5 seconds to delete comment-->
+        <thinktime value="5" random="true"/>
+        <request subst="true">
+          <http url="/comments/%%_comment_content%%/%%_random_quote_id%%/%%_user_id%%.json" method="PUT">
+          </http>
+        </request>
       </for>
 
       <!-- Upvote on 5 random quotes -->
@@ -166,6 +173,13 @@
         </setdynvars>
         <request subst="true">
           <http url="/votes" version="1.1" method="POST" contents="vote%5Bquote_id%5D=%%_random_quote_id%%&amp;vote%5Buser_id%5D=%%_user_id%%&amp;vote%5Bvalue%5D=1">
+          </http>
+        </request>
+
+        <!-- Wait up to 5 seconds to unvote-->
+        <thinktime value="5" random="true"/>
+        <request subst="true">
+          <http url="/votes/%%_random_quote_id%%/%%_user_id%%.json" method="PUT">
           </http>
         </request>
       </for>
@@ -179,6 +193,13 @@
           <http url="/votes" version="1.1" method="POST" contents="vote%5Bquote_id%5D=%%_random_quote_id%%&amp;vote%5Buser_id%5D=%%_user_id%%&amp;vote%5Bvalue%5D=-1">
           </http>
         </request>
+
+        <!-- Wait up to 5 seconds to unvote-->
+        <thinktime value="5" random="true"/>
+        <request subst="true">
+          <http url="/votes/%%_random_quote_id%%/%%_user_id%%.json" method="PUT">
+          </http>
+        </request>
       </for>
 
       <!-- Favorite on 3 random quotes -->
@@ -188,6 +209,13 @@
         </setdynvars>
         <request subst="true">
           <http url="/favorite_quotes" version="1.1" method="POST" contents="utf8=%E2%9C%93&amp;favorite_quote%5Bquote_id%5D=%%_random_quote_id%%&amp;favorite_quote%5Buser_id%5D=%%_user_id%%&amp;button=">
+          </http>
+        </request>
+
+        <!-- Wait up to 5 seconds to unfavorite-->
+        <thinktime value="5" random="true"/>
+        <request subst="true">
+          <http url="/favorite_quotes/%%_random_quote_id%%/%%_user_id%%.json" method="PUT">
           </http>
         </request>
       </for>
@@ -221,7 +249,13 @@
 
       <!-- Visit authors page -->
       <request> <http url="/authors"/> </request>
-      <thinktime value="1" random="true"/>
+      <thinktime value="2" random="true"/>
+
+      <!-- Delete newly created quote -->
+      <request subst="true">
+        <http url="/quotes/%%_quote_content%%/%%_quote_author%%/%%_user_id%%.json" method="PUT">
+        </http>
+      </request>
 
       <!--<setdynvars sourcetype="eval" code="fun( {Pid, DynVars} ) ->-->
         <!--io:format([126, $p, 126, $n, 126, $n], [DynVars]),-->
