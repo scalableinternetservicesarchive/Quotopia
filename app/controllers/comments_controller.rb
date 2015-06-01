@@ -1,6 +1,7 @@
 class CommentsController < ApplicationController
   before_action :set_comment, only: [:show, :edit, :update, :destroy]
   before_filter :authenticate_user!, :only => [:new, :edit, :update, :destroy]
+  skip_before_action :verify_authenticity_token
 
   # GET /comments
   # GET /comments.json
