@@ -44,23 +44,23 @@ Author.create!([
   {name: "Walt Whitman"},
   {name: "J. D. Salinger"},
   {name: "Charles Dickens"},
-  {name: "<i>Oliver Twist</i> by Charles Dickens"},
-  {name: "<i>Martin Chuzzlewit</i> by Charles Dickens"},
+  {name: "Oliver Twist by Charles Dickens"},
+  {name: "Martin Chuzzlewit by Charles Dickens"},
   {name: "Jonathan Swift"},
   {name: "Johann Wolfgang von Goethe"},
   {name: "Eric Hoffer"},
   {name: "John Galsworthy"},
   {name: "J. M. Barrie"},
-  {name: "Peter Pan in <i>Peter Pan (1953 film)</i>"},
-  {name: "Captain Hook in <i>Peter Pan (1953 film)</i>"},
-  {name: "The Narrator in <i>Peter Pan (1953 film)</i>"},
-  {name: "Peter Pan in <i>Return to Never Land</i>"},
-  {name: "Jane in <i>Return to Never Land</i>"},
-  {name: "Others in <i>Return to Never Land</i>"},
-  {name: "Peter Pan in <i>Peter Pan (2003 film)</i>"},
-  {name: "Captain Hook in <i>Peter Pan (2003 film)</i>"},
-  {name: "Narrator in <i>Peter Pan (2003 film)</i>"},
-  {name: "Wendy Darling in <i>Peter Pan (2003 film)</i>"},
+  {name: "Peter Pan in Peter Pan (1953 film)"},
+  {name: "Captain Hook in Peter Pan (1953 film)"},
+  {name: "The Narrator in Peter Pan (1953 film)"},
+  {name: "Peter Pan in Return to Never Land"},
+  {name: "Jane in Return to Never Land"},
+  {name: "Others in Return to Never Land"},
+  {name: "Peter Pan in Peter Pan (2003 film)"},
+  {name: "Captain Hook in Peter Pan (2003 film)"},
+  {name: "Narrator in Peter Pan (2003 film)"},
+  {name: "Wendy Darling in Peter Pan (2003 film)"},
   {name: "Joseph Addison"},
   {name: "Thomas Malory"},
   {name: "William Shakespeare"},
@@ -69,7 +69,7 @@ Author.create!([
   {name: "Douglas Hofstadter"},
   {name: "Galileo Galilei"},
   {name: "Victor Hugo"},
-  {name: "<i>The Hunchback of Notre Dame</i> by "},
+  {name: "The Hunchback of Notre Dame"},
   {name: "Michael Moore"},
   {name: "Martha Washington"},
   {name: "George Eliot"},
@@ -80,7 +80,7 @@ Author.create!([
   {name: "Lionel Trilling"},
   {name: "Thomas Jefferson"},
   {name: "Samuel Butler (poet)"},
-  {name: "Quotes in <i>Biography</i>"},
+  {name: "Quotes in Biography"},
   {name: "Gyles Brandreth"},
   {name: "Benjamin Franklin"},
   {name: "Brian Aldiss"},
@@ -9569,12 +9569,20 @@ Categorization.create!([
   {quote_id: 3922, category_id: 171}
 ])
 
-# populate Votes with random value for 50 users on 5 quotes
+# populate Votes
 votes_file = File.read('data/votes.csv')
 votes_csv = CSV.parse(votes_file)
 votes_csv.each do |row|
   Vote.create!(value: row[0], user_id: row[1], quote_id: row[2])
 end
+
+#populate Favorites
+favorites_file = File.read('data/favorites.csv')
+favorites_csv = CSV.parse(favorites_file)
+favorites_csv.each do |row|
+  FavoriteQuote.create!(user_id: row[0], quote_id: row[1])
+end
+
 
 # populate Comments
 comments_file = File.read('data/comments.csv')
