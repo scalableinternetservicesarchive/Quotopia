@@ -10,6 +10,6 @@ module CategoriesHelper
 
   def cache_key_for_category_table(categories)
     # max_updated_at = Category.maximum(:updated_at).try(:utc).try(:to_s, :number)
-    "categories/#{categories.length}"
+    "categories/#{categories.maximum(:updated_at).try(:utc).try(:to_s, :number)}"
   end
 end
