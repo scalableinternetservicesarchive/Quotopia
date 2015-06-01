@@ -64,7 +64,7 @@
       <!-- Visit 4 more pages of trending -->
       <for from="2" to="5" incr="1" var="pagenum">
         <request subst="true">
-          <http url="/?page=%%_pagenum%%&amp;tab=trending" version="1.1" method="GET"/>
+          <http url="/home/index.json?page=%%_pagenum%%&amp;tab=trending" method="GET"/>
         </request>
         <thinktime value="2" random="true"/>
       </for>
@@ -72,13 +72,13 @@
       <!-- Visit 5 pages of new quotes -->
       <for from="1" to="5" incr="1" var="pagenum">
         <request subst="true">
-          <http url="/?page=%%_pagenum%%&amp;tab=new" version="1.1" method="GET"/>
+          <http url="/home/index.json?page=%%_pagenum%%&amp;tab=new" method="GET"/>
         </request>
         <thinktime value="2" random="true"/>
       </for>
 
       <!-- Visit the authors page -->
-      <request><http url="/authors" version="1.1" method="GET"/></request>
+      <request><http url="/authors.json" method="GET"/></request>
 
     </session>
 
@@ -105,18 +105,18 @@
 
       <!-- Visit 4 more pages of trending -->
       <for from="2" to="5" incr="1" var="pagenum">
-        <request subst="true"> <http url="/?page=%%_pagenum%%&amp;tab=trending"/> </request>
+        <request subst="true"> <http url="/home/index.json?page=%%_pagenum%%&amp;tab=trending"/> </request>
         <thinktime value="2" random="true"/>
       </for>
 
       <!-- Visit 2 pages of new quotes -->
       <for from="1" to="2" incr="1" var="pagenum">
-        <request subst="true"> <http url="/?page=%%_pagenum%%&amp;tab=new"/> </request>
+        <request subst="true"> <http url="/home/index.json?page=%%_pagenum%%&amp;tab=new"/> </request>
         <thinktime value="2" random="true"/>
       </for>
 
       <!-- Visit first page of all time quotes -->
-      <request> <http url="/?tab=all-time"/> </request>
+      <request> <http url="/home/index.json?tab=all-time"/> </request>
       <thinktime value="2" random="true"/>
 
       <!-- Get list of all time quotes on first page -->
@@ -140,7 +140,7 @@
           <var name="random_quote_id"/>
         </setdynvars>
         <request subst="true">
-          <http url="/quotes/%%_random_quote_id%%" version="1.1" method="GET"/>
+          <http url="/quotes/%%_random_quote_id%%.json" method="GET"/>
         </request>
         <thinktime value="3" random="true"/>
       </for>	
@@ -155,14 +155,14 @@
         </setdynvars>
         <request subst="true">
           <dyn_variable name="created_comment_id" jsonpath="[*].id"/>
-          <http url="/quotes/%%_random_quote_id%%/comments.json" version="1.1" method="POST" contents="utf8=%E2%9C%93&amp;authenticity_token=12345&amp;comment%5Bcontent%5D=%%_comment_content%%&amp;button=">
+          <http url="/quotes/%%_random_quote_id%%/comments.json" method="POST" contents="utf8=%E2%9C%93&amp;authenticity_token=12345&amp;comment%5Bcontent%5D=%%_comment_content%%&amp;button=">
           </http>
         </request>
 
         <!-- Wait for up to 5 seconds to delete comment-->
         <thinktime value="5" random="true"/>
         <request subst="true">
-          <http url="/comments/%%_created_comment_id%%" method="DELETE">
+          <http url="/quotes/%%_random_quote_id%%/comments/%%_created_comment_id%%.json" method="DELETE">
           </http>
         </request>
       </for>
@@ -181,7 +181,7 @@
         <!-- Wait up to 5 seconds to unvote-->
         <thinktime value="5" random="true"/>
         <request subst="true">
-          <http url="/votes/%%_created_vote_id" method="DELETE">
+          <http url="/votes/%%_created_vote_id.json" method="DELETE">
           </http>
         </request>
       </for>
@@ -200,7 +200,7 @@
         <!-- Wait up to 5 seconds to unvote-->
         <thinktime value="5" random="true"/>
         <request subst="true">
-          <http url="/votes/%%_created_vote_id%%" method="DELETE">
+          <http url="/votes/%%_created_vote_id%%.json" method="DELETE">
           </http>
         </request>
       </for>
@@ -219,7 +219,7 @@
         <!-- Wait up to 5 seconds to unfavorite-->
         <thinktime value="5" random="true"/>
         <request subst="true">
-          <http url="/favorite_quotes/%%_created_favorite_id%%" method="DELETE">
+          <http url="/favorite_quotes/%%_created_favorite_id%%.json" method="DELETE">
           </http>
         </request>
       </for>
@@ -249,16 +249,16 @@
       </request>
 
       <!-- Visit categories page -->
-      <request> <http url="/categories"/> </request>
+      <request> <http url="/categories.json"/> </request>
       <thinktime value="2" random="true"/>
 
       <!-- Visit authors page -->
-      <request> <http url="/authors"/> </request>
+      <request> <http url="/authors.json"/> </request>
       <thinktime value="2" random="true"/>
 
       <!-- Delete newly created quote -->
       <request subst="true">
-        <http url="/quotes/%%_created_quote_id%%" method="DELETE">
+        <http url="/quotes/%%_created_quote_id%%.json" method="DELETE">
         </http>
       </request>
 
