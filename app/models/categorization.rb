@@ -1,6 +1,6 @@
 class Categorization < ActiveRecord::Base
   belongs_to :quote #, touch: true
-  belongs_to :category
+  belongs_to :category, :touch => true
 
   trigger.after(:insert) do
     "UPDATE categories SET quote_count = quote_count + 1 WHERE NEW.category_id =  id;"
