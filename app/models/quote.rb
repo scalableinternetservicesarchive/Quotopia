@@ -17,6 +17,7 @@ class Quote < ActiveRecord::Base
   validates :content_hash, uniqueness: {scope: :author, case_sensitive: false,
                     message: "quote should be unique per author"}
   validates :author, presence: true
+  validates :user, presence: true
 
   # This determines how many quotes to display per page
   paginates_per 7
