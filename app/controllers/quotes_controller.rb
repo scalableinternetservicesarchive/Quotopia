@@ -56,7 +56,7 @@ class QuotesController < ApplicationController
     respond_to do |format|
       if @quote.save
         format.html { redirect_to @quote, notice: 'Quote was successfully created.' }
-        format.json { render :show, status: :created, location: @quote }
+        format.json { render json: @quote, status: :created }
       else
         format.html { render :new }
         format.json { render json: @quote.errors, status: :unprocessable_entity }

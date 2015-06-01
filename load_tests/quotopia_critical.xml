@@ -154,14 +154,15 @@
           <var name="comment_content"/>
         </setdynvars>
         <request subst="true">
-          <http url="/quotes/%%_random_quote_id%%/comments" version="1.1" method="POST" contents="utf8=%E2%9C%93&amp;authenticity_token=12345&amp;comment%5Bcontent%5D=%%_comment_content%%&amp;button=">
+          <dyn_variable name="created_comment_id" jsonpath="[*].id"/>
+          <http url="/quotes/%%_random_quote_id%%/comments.json" version="1.1" method="POST" contents="utf8=%E2%9C%93&amp;authenticity_token=12345&amp;comment%5Bcontent%5D=%%_comment_content%%&amp;button=">
           </http>
         </request>
 
         <!-- Wait for up to 5 seconds to delete comment-->
         <thinktime value="5" random="true"/>
         <request subst="true">
-          <http url="/comments/%%_comment_content%%/%%_random_quote_id%%/%%_user_id%%.json" method="PUT">
+          <http url="/comments/%%_created_comment_id%%" method="DELETE">
           </http>
         </request>
       </for>
@@ -172,14 +173,15 @@
           <var name="random_quote_id"/>
         </setdynvars>
         <request subst="true">
-          <http url="/votes" version="1.1" method="POST" contents="vote%5Bquote_id%5D=%%_random_quote_id%%&amp;vote%5Buser_id%5D=%%_user_id%%&amp;vote%5Bvalue%5D=1">
+          <dyn_variable name="created_vote_id" jsonpath="[*].id"/>
+          <http url="/votes.json" version="1.1" method="POST" contents="vote%5Bquote_id%5D=%%_random_quote_id%%&amp;vote%5Buser_id%5D=%%_user_id%%&amp;vote%5Bvalue%5D=1">
           </http>
         </request>
 
         <!-- Wait up to 5 seconds to unvote-->
         <thinktime value="5" random="true"/>
         <request subst="true">
-          <http url="/votes/%%_random_quote_id%%/%%_user_id%%.json" method="PUT">
+          <http url="/votes/%%_created_vote_id" method="DELETE">
           </http>
         </request>
       </for>
@@ -190,14 +192,15 @@
           <var name="random_quote_id"/>
         </setdynvars>
         <request subst="true">
-          <http url="/votes" version="1.1" method="POST" contents="vote%5Bquote_id%5D=%%_random_quote_id%%&amp;vote%5Buser_id%5D=%%_user_id%%&amp;vote%5Bvalue%5D=-1">
+          <dyn_variable name="created_vote_id" jsonpath="[*].id"/>
+          <http url="/votes.json" version="1.1" method="POST" contents="vote%5Bquote_id%5D=%%_random_quote_id%%&amp;vote%5Buser_id%5D=%%_user_id%%&amp;vote%5Bvalue%5D=-1">
           </http>
         </request>
 
         <!-- Wait up to 5 seconds to unvote-->
         <thinktime value="5" random="true"/>
         <request subst="true">
-          <http url="/votes/%%_random_quote_id%%/%%_user_id%%.json" method="PUT">
+          <http url="/votes/%%_created_vote_id%%" method="DELETE">
           </http>
         </request>
       </for>
@@ -208,14 +211,15 @@
           <var name="random_quote_id"/>
         </setdynvars>
         <request subst="true">
-          <http url="/favorite_quotes" version="1.1" method="POST" contents="utf8=%E2%9C%93&amp;favorite_quote%5Bquote_id%5D=%%_random_quote_id%%&amp;favorite_quote%5Buser_id%5D=%%_user_id%%&amp;button=">
+          <dyn_variable name="created_favorite_id" jsonpath="[*].id"/>
+          <http url="/favorite_quotes.json" version="1.1" method="POST" contents="utf8=%E2%9C%93&amp;favorite_quote%5Bquote_id%5D=%%_random_quote_id%%&amp;favorite_quote%5Buser_id%5D=%%_user_id%%&amp;button=">
           </http>
         </request>
 
         <!-- Wait up to 5 seconds to unfavorite-->
         <thinktime value="5" random="true"/>
         <request subst="true">
-          <http url="/favorite_quotes/%%_random_quote_id%%/%%_user_id%%.json" method="PUT">
+          <http url="/favorite_quotes/%%_created_favorite_id%%" method="DELETE">
           </http>
         </request>
       </for>
@@ -234,7 +238,8 @@
         <http url="/quotes/new" version="1.1" method="GET"/>
       </request>
       <request subst="true">
-        <http url="/quotes" version="1.1" method="POST" contents="quote%5Bcontent%5D=%%_quote_content%%&amp;quote%5Bauthor_attributes%5D%5Bname%5D=%%_quote_author%%&amp;quote%5Bcategory_list%5D=%%_category%%&amp;button=">
+        <dyn_variable name="created_quote_id" jsonpath="[*].id"/>
+        <http url="/quotes.json" version="1.1" method="POST" contents="quote%5Bcontent%5D=%%_quote_content%%&amp;quote%5Bauthor_attributes%5D%5Bname%5D=%%_quote_author%%&amp;quote%5Bcategory_list%5D=%%_category%%&amp;button=">
         </http>
       </request>
 
@@ -253,7 +258,7 @@
 
       <!-- Delete newly created quote -->
       <request subst="true">
-        <http url="/quotes/%%_quote_content%%/%%_quote_author%%/%%_user_id%%.json" method="PUT">
+        <http url="/quotes/%%_created_quote_id%%" method="DELETE">
         </http>
       </request>
 
