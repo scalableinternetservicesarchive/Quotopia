@@ -103,6 +103,20 @@ class QuotesController < ApplicationController
     end
   end
 
+  # PUT /quotes/:content/:author/:user_id
+  # PUT /quotes/:content/:author/:user_id.json
+  def destroy_from_params
+    @author = Author.where(name: params[:author]).first
+    @quote = Quote.where(content: params[:content], author_id: @author.id, user_id: params[:user_id]).first
+    if !@quote.nil?
+      @quote.destroy
+    end
+    respond_to do |format|
+      format.html { redirect_to root_url, notice: 'Quote was successfully destroyed.' }
+      format.json { head :no_content }
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_quote
