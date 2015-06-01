@@ -3,7 +3,9 @@ $('.vote-<%=@quote_id%>').html(
     "<%= j render(
         :partial => "votes/quote_vote", 
         :locals => { 
-            :quote => Quote.find(@quote_id), 
+            :quote => Quote.find(@quote_id),
+            :vote_id => @vote.id,
+            :vote_value => @vote.value,
             :current_user_id => @vote.user_id
         }
     ) %>");

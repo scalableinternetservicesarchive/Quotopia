@@ -1,22 +1,36 @@
 <% 
+    if user_signed_in?
+        @user_signed_in = true
+        @current_user_id = current_user.id
+    else
+        @user_signed_in = false
+    end
+
+    @allow_twitter = false
+    if !current_user.nil? && !current_user.provider.nil? && current_user.provider.include?("twitter")
+        @allow_twitter = true
+    end
+
     display_author = true if local_assigns[:display_author].nil?
     author = nil if local_assigns[:author].nil?
     categories = nil if local_assigns[:categories].nil?
 %>
 <% quotes.each do |quote| %>
     <%
-       @author_string = author.nil? ? quote.author_name : author
-       @categories_string = categories.nil? ? quote.categories.map {|c| '#' + c.content.gsub(/\s+/, "")}.join(' ') : "##{categories.content}"
-       @tweet_content = "#{quote.content} -#{@author_string} #{@categories_string}".truncate(140)
+        @author_string = author.nil? ? quote.author_name : author
+        if @allow_twitter    
+            @categories_string = categories.nil? ? quote.categories.map {|c| '#' + c.content.gsub(/\s+/, "")}.join(' ') : "##{categories.content}"
+            @tweet_content = "#{quote.content} -#{@author_string} #{@categories_string}".truncate(140)
+        end
     %>
     <div class="quote row vertical-align">
         <div class="row-same-height">
         <div class="col-xs-2 col-xs-height col-middle vote vote-<%=quote.id%>">
-            <% if user_signed_in? %>
-                <%= render partial: "votes/quote_vote", locals: {quote: quote, current_user_id: current_user.id} %>
+            <% if @user_signed_in %>
+                <%= render partial: "votes/quote_vote", locals: {quote: quote, vote_id: quote.vote_id, vote_value: quote.vote_value, current_user_id: @current_user_id} %>
             <% else %>
                 <span class="fa fa-2x fa-chevron-up gray" aria-hidden="true" data-toggle="tooltip" data-trigger="hover" title="Sign in to upvote"></span>
-                <h4 class="vote-count"><%= Vote.quote_count(quote.id) %> </h4>
+                <h4 class="vote-count"><%= quote.vote_count %> </h4>
                 <span class="fa fa-2x fa-chevron-down gray" aria-hidden="true" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Sign in to downvote"></span>
             <% end %>
         </div>
@@ -39,12 +53,9 @@
         
     <div class="col-xs-2 col-xs-height col-middle center quote-buttons">
         <div class="quote-buttons">
-            <% if user_signed_in? %>
-                <%
-                   @favorite = FavoriteQuote.where(quote_id: quote.id, user_id: current_user.id).first
-                %>
+            <% if @user_signed_in %>
                 <div class="favorite-<%=quote.id%>">
-                    <%= render partial: "favorite_quotes/favorite_block", locals: {quote_id: quote.id, favorite: @favorite, current_user_id: current_user.id} %>
+                    <%= render partial: "favorite_quotes/favorite_block", locals: {quote_id: quote.id, favorite_id: quote.favorite_id, current_user_id: current_user.id} %>
                 </div>      
             <% else %>
                  <button style="cursor: default;pointer-events: auto;" type="submit" class="btn btn-default disabled" data-toggle="tooltip" data-trigger="hover" title="Sign in to favorite">

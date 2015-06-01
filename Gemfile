@@ -69,7 +69,8 @@ group :development, :test do
   gem 'faker'
 
   gem 'seed_dump'
-  # Dependency for flamegraph
+  
+# Dependency for flamegraph
   gem 'stackprof'
 
   # Bullet finds where you can reduce queries

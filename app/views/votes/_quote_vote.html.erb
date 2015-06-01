@@ -1,6 +1,5 @@
-<!-- Needs quote and current_user -->
+<!-- Needs quote, vote_id, vote_value, current_user_id -->
 <% 
-    @vote = Vote.already_voted(quote.id, current_user_id) 
     @votepath = votes_path
     @method = :post
     @upvote_value = 1
@@ -9,13 +8,14 @@
     @downvote_class = "fa-chevron-down black"
     @allow_upvote = true
     @allow_downvote = true
-    if @vote != nil 
-        @votepath = votes_path
-        if @vote.value == 1
+    if vote_value != nil 
+        @votepath = vote_path(vote_id)
+        @method = :put
+        if vote_value == 1
             @allow_upvote = false
             @upvote_class = "fa-chevron-up gray"
             @downvote_value = 0
-        elsif @vote.value == -1
+        elsif vote_value == -1
             @allow_downvote = false
             @downvote_class = "fa-chevron-down gray"
             @upvote_value = 0
@@ -36,7 +36,7 @@
 <% else %>
     <span class="fa fa-2x <%= @upvote_class %>" aria-hidden="true"></span>
 <% end %>
-<h4 class="vote-count-<%=quote.id%>"><%= Vote.quote_count(quote.id) %> </h4>
+<h4 class="vote-count-<%=quote.id%>"><%= quote.vote_count %> </h4>
 <% if @allow_downvote %>
     <%= link_to votes_path,
         data: { :method => @method, 
