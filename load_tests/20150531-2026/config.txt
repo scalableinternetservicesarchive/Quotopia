@@ -1,0 +1,2 @@
+m3.medium, nginx+ passenger, 1 appserver
+First loadtest after fixing User being nil

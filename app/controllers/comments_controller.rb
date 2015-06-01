@@ -29,7 +29,8 @@ class CommentsController < ApplicationController
   # POST /comments.json
   def create
     @quote = Quote.find(params[:quote_id])
-    @comment = Comment.new(content: comment_params[:content], quote: @quote, user: current_user)
+    @userid = (current_user.nil?) ? nil : current_user.id
+    @comment = Comment.new(content: comment_params[:content], quote_id: @quote.id, user_id: @userid)
 
     respond_to do |format|
       if @comment.save
@@ -56,8 +57,8 @@ class CommentsController < ApplicationController
     end
   end
 
-  # DELETE /comments/1
-  # DELETE /comments/1.json
+  # DELETE /quotes/:quote_id/comments/1
+  # DELETE /quotes/:quote_id/comments/1.json
   def destroy
     @comment.destroy
     respond_to do |format|
