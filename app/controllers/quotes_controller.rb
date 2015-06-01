@@ -107,7 +107,7 @@ class QuotesController < ApplicationController
   # PUT /quotes/:content/:author/:user_id.json
   def destroy_from_params
     @author = Author.where(name: params[:author]).first
-    @quote = Quote.where(content: params[:content], author_id: @author.id, user_id: params[:user_id]).first
+    @quote = Quote.where(content: params[:content], author_id: @author.id).first
     if !@quote.nil?
       @quote.destroy
     end
