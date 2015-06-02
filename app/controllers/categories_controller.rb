@@ -2,55 +2,14 @@ class CategoriesController < ApplicationController
   before_action :set_category, only: [:show, :edit, :update, :destroy]
   before_filter :authenticate_user!, :only => [:new, :edit, :update, :destroy]
   
+  @@column_names = ["content", "quote_count"]
+
   def category_ajax
     # note that there are 3 columns in this table:
     # Rank | Name | Quotes  
-    @draw = params[:draw]
-    @start = params[:start] #row index to start at (0-indexed)
-    @length = params[:length] # the number of results to return
-    @search = params[:search]["value"] #the search query to filter over
-    @orders = params[:order] # ordering information
-    @columns = params[:columns] # column information
-    
-    @search ||= ""
-    @orders ||= []
-    @columns ||= []
-
-    @result = {}
-    @result["draw"] = @draw
+       
+    @result = parse_datatable_ajax(@@column_names)
     @result["recordsTotal"] = Category.count
-    # generate "where" clause
-    @where = ""
-   
-    unless @search.empty?
-        @columns.each { |col_num, column|
-            if column["searchable"] == "true" && @where != ""
-                @where += " OR #{column["data"]} like '%#{@search}%'"
-            elsif column["searchable"] == "true"
-                @where += "#{column["data"]} like '%#{@search}%'"
-            end
-        }
-    end 
-
-    # generate "order" clause
-    @order = ""
-    unless @orders.empty?
-        @orders.each do |order_num, ordering|
-            if order_num.to_i > 0
-                @order += ", "
-            end
-
-            case ordering["column"].to_i
-            when 0
-                @order += " content "
-            when 1
-                @order += " quote_count "
-            end
-            
-            @order += ordering["dir"].upcase
-        end 
-    end
-
     @result["recordsFiltered"] = Category.where(@where).count
     @categories = Category.select("content, quote_count").where(@where).order(@order).limit(@length).offset(@start).to_a
     @result["data"] = @categories
