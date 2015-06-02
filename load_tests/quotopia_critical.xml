@@ -367,9 +367,9 @@
 
         <!-- Visit random quote -->
         <request subst="true">
-          <dyn_variable name="author_name" jsonpath="[author].name"/>
-          <dyn_variable name="category_list" jsonpath="[categories].*.content"/>
-          <http url="/quotes/%%_random_quote_id%%" method="GET"/>
+          <dyn_variable name="author_name" jsonpath="author.name"/>
+          <dyn_variable name="category_list" jsonpath="categories[*].content"/>
+          <http url="/quotes/%%_random_quote_id%%.json" method="GET"/>
         </request>
 
         <!-- Wait up to 2 seconds before deciding to edit the quote -->
