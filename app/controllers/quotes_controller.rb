@@ -24,6 +24,10 @@ class QuotesController < ApplicationController
     @comment = Comment.new
     @categories = @quote.categories.map {|c| '#' + c.content.gsub(/\s+/, "")}.join(' ')
     @tweet = "#{@quote.content} -#{@quote.author.name} #{@categories}".truncate(140)
+    respond_to do |format|
+        format.html { }
+        format.json { render json: @quote.as_json() }
+    end
   end
 
 

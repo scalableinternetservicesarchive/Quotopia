@@ -63,4 +63,12 @@ class Quote < ActiveRecord::Base
       end.join(", ")
   end
 
+  def as_json(options={})
+    super(:only => [:id, :content],
+    :include => {
+        :author => {:only => [:name]},
+        :categories => {:only => [:content]}
+    })
+  end
+
 end
