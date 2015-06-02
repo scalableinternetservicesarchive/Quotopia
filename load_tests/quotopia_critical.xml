@@ -164,7 +164,7 @@
               <var name="category_id"/>
             </setdynvars>
             <request subst="true">
-              <http url="categories/%%_category_id%%" method="GET"/>
+              <http url="/categories/%%_category_id%%" method="GET"/>
             </request>
             <!-- Look at specific category for up to 2 seconds -->
             <thinktime value="2" random="true"/>
