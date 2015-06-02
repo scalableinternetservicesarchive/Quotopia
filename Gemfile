@@ -79,10 +79,9 @@ end
 
 group :production do
   gem 'mysql2'
+  gem 'newrelic_rpm'
 end
 
 gem 'mocha', group: :test
 
-# new relic performance monitoring
-gem 'newrelic_rpm'
 
