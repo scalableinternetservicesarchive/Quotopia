@@ -9,9 +9,53 @@ class CategoriesController < ApplicationController
     @start = params[:start] #row index to start at (0-indexed)
     @length = params[:length] # the number of results to return
     @search = params[:search]["value"] #the search query to filter over
-    @order = params[:order] # ordering information
+    @orders = params[:order] # ordering information
     @columns = params[:columns] # column information
+    
+    @search ||= ""
+    @orders ||= []
+    @columns ||= []
 
+    @result = {}
+    @result["draw"] = @draw
+    @result["recordsTotal"] = Category.count
+    # generate "where" clause
+    @where = ""
+   
+    unless @search.empty?
+        @columns.each { |col_num, column|
+            if column["searchable"] == "true" && @where != ""
+                @where += " OR #{column["data"]} like %#{@search}%"
+            elsif column["searchable"] == "true"
+                @where += "#{column["data"]} like %#{@search}%"
+            end
+        }
+    end 
+
+    # generate "order" clause
+    @order = ""
+    unless @orders.empty?
+        @orders.each do |order_num, ordering|
+            if order_num.to_i > 0
+                @order += ", "
+            end
+
+            case ordering["column"].to_i
+            when 0
+                @order += " content "
+            when 1
+                @order += " quote_count "
+            end
+            
+            @order += ordering["dir"].upcase
+        end 
+    end
+
+    @result["recordsFiltered"] = Category.where(@where).count
+    @categories = Category.select("content as name, quote_count as Quotes").where(@where).order(@order).limit(@length).offset(@start).to_a
+    @result["data"] = @categories
+    
+    puts render json: @result
   end
 
   # GET /categories
