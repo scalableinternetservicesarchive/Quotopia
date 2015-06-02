@@ -55,30 +55,95 @@
 
       <sessions>
         <session name="unauthed" probability="50" type="ts_http">
+          <!-- Visit homepage -->
           <request>
             <http url="/" version="1.1" method="GET"/>
           </request>
 
+          <!-- Wait up to 2 seconds before visiting more trending pages -->
           <thinktime value="2" random="true"/>
+          <!-- Visit 4 more pages of trending -->
+          <for from="2" to="5" incr="1" var="pagenum">
+            <request subst="true">
+              <dyn_variable name="trending_quote_id_list" jsonpath="[*].id"/>
+              <http url="/home/index.json?page=%%_pagenum%%&amp;tab=trending" method="GET"/>
+            </request>
 
-      <!-- Visit 4 more pages of trending -->
-      <for from="2" to="5" incr="1" var="pagenum">
-        <request subst="true">
-          <http url="/home/index.json?page=%%_pagenum%%&amp;tab=trending" method="GET"/>
-        </request>
-        <thinktime value="2" random="true"/>
-      </for>
+            <!-- Wait up to 2 seconds before visiting a random quote on the trending page" -->
+            <thinktime value="2" random="true"/>
+            <setdynvars sourcetype="eval"
+                        code="fun({Pid,DynVars})->
+                        {ok,Val}=ts_dynvars:lookup('trending_quote_id_list',DynVars),
+                        Rand = random:uniform(length(Val)),
+                        lists:nth(Rand,Val)
+                        end.">
+              <var name="trending_quote_id"/>
+            </setdynvars>
+              <request subst="true">
+                <http url="/quotes/%%_trending_quote_id%%" method="GET"/>
+              </request>
 
-      <!-- Visit 5 pages of new quotes -->
-      <for from="1" to="5" incr="1" var="pagenum">
-        <request subst="true">
-          <http url="/home/index.json?page=%%_pagenum%%&amp;tab=new" method="GET"/>
-        </request>
-        <thinktime value="2" random="true"/>
-      </for>
+            <!-- Look at quote for up to 2 seconds -->
+            <thinktime value="2" random="true"/>
+          </for>
 
-      <!-- Visit the authors page -->
-      <request><http url="/authors.json" method="GET"/></request>
+          <!-- Visit 5 pages of new quotes -->
+          <for from="1" to="5" incr="1" var="pagenum">
+            <request subst="true">
+              <http url="/home/index?page=%%_pagenum%%&amp;tab=new" method="GET"/>
+            </request>
+
+            <!-- Look at new quote page for up to 2 seconds -->
+            <thinktime value="2" random="true"/>
+          </for>
+
+          <!-- Visit the authors page -->
+          <request>
+            <dyn_variable name="author_id_list" jsonpath="[*].id"/>
+            <http url="/authors.json" method="GET"/>
+          </request>
+
+          <!-- Wait up to 2 seconds before visiting each of the 5 random authors -->
+          <for from="1" to="5" incr="1" var="counter">
+            <thinktime value="2" random="true"/>
+            <setdynvars sourcetype="eval"
+                        code="fun({Pid,DynVars})->
+                        {ok,Val}=ts_dynvars:lookup('author_id_list',DynVars),
+                        Rand = random:uniform(length(Val)),
+                        lists:nth(Rand,Val)
+                        end.">
+              <var name="author_id"/>
+            </setdynvars>
+            <request subst="true">
+              <http url="/authors/%%_author_id%%" method="GET"/>
+            </request>
+            <!-- Look at specific author for up to 2 seconds -->
+            <thinktime value="2" random="true"/>
+          </for>
+
+          <!-- Visit the categories page -->
+          <request>
+            <dyn_variable name="category_id_list" jsonpath="[*].id"/>
+            <http url="/categories.json" method="GET"/>
+          </request>
+
+          <!-- Wait up to 2 seconds before visiting each of the 5 random categories -->
+          <for from="1" to="5" incr="1" var="counter">
+            <thinktime value="2" random="true"/>
+            <setdynvars sourcetype="eval"
+                        code="fun({Pid,DynVars})->
+                        {ok,Val}=ts_dynvars:lookup('category_id_list',DynVars),
+                        Rand = random:uniform(length(Val)),
+                        lists:nth(Rand,Val)
+                        end.">
+              <var name="category_id"/>
+            </setdynvars>
+            <request subst="true">
+              <http url="categories/%%_category_id%%" method="GET"/>
+            </request>
+            <!-- Look at specific category for up to 2 seconds -->
+            <thinktime value="2" random="true"/>
+          </for>
 
     </session>
 
@@ -105,42 +170,27 @@
 
       <!-- Visit 4 more pages of trending -->
       <for from="2" to="5" incr="1" var="pagenum">
-        <request subst="true"> <http url="/home/index.json?page=%%_pagenum%%&amp;tab=trending"/> </request>
+        <request subst="true"> <http url="/home/index?page=%%_pagenum%%&amp;tab=trending"/> </request>
         <thinktime value="2" random="true"/>
       </for>
 
       <!-- Visit 2 pages of new quotes -->
       <for from="1" to="2" incr="1" var="pagenum">
-        <request subst="true"> <http url="/home/index.json?page=%%_pagenum%%&amp;tab=new"/> </request>
+        <request subst="true"> <http url="/home/index?page=%%_pagenum%%&amp;tab=new"/> </request>
         <thinktime value="2" random="true"/>
       </for>
 
       <!-- Visit first page of all time quotes -->
-      <request> <http url="/home/index.json?tab=all-time"/> </request>
+      <request> <http url="/home/index?tab=all-time"/> </request>
       <thinktime value="2" random="true"/>
 
-      <!-- Get list of all time quotes on first page -->
-<!--      <request subst="true">
-        <dyn_variable name="alltime_quotes" jsonpath="[*].id"/>
-        <http url="/home/index.json?tab=all-time"/>
-      </request>
--->
-      <!-- Iterate over list and visit each quote for 5 seconds -->
-<!--      <foreach name="quote_id" in="alltime_quotes">
-        <request subst="true">
-          <http url="/quotes/%%_quote_id%%" version="1.1" method="GET"/>
-        </request>
-        <thinktime value="5" random="true"/>
-      </foreach>
--->
-
-      <!-- Visit 10 random quotes -->
-      <for from="1" to="10" var="counter">
+      <!-- Visit 5 random quotes -->
+      <for from="1" to="5" var="counter">
         <setdynvars sourcetype="random_number" start="1" end="3000">
           <var name="random_quote_id"/>
         </setdynvars>
         <request subst="true">
-          <http url="/quotes/%%_random_quote_id%%.json" method="GET"/>
+          <http url="/quotes/%%_random_quote_id%%" method="GET"/>
         </request>
         <thinktime value="3" random="true"/>
       </for>	
@@ -247,15 +297,7 @@
       <request subst="true">
         <http url="/quotes?search=%%_quote_content%%" version="1.1" method="GET"/>
       </request>
-
-      <!-- Visit categories page -->
-      <request> <http url="/categories.json"/> </request>
-      <thinktime value="2" random="true"/>
-
-      <!-- Visit authors page -->
-      <request> <http url="/authors.json"/> </request>
-      <thinktime value="2" random="true"/>
-
+        
       <!-- Delete newly created quote -->
       <request subst="true">
         <http url="/quotes/%%_created_quote_id%%.json" method="DELETE">

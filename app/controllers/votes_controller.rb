@@ -55,7 +55,7 @@ class VotesController < ApplicationController
             format.js {render action: "update"}
           else
             format.html { render :new }
-            format.json { render  }
+            format.json { render json: @vote.errors, status: :unprocessable_entity }
             format.js {}
           end
         else
