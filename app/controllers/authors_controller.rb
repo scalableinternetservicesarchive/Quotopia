@@ -11,6 +11,7 @@ class AuthorsController < ApplicationController
   end
 
   def author_ajax 
+    # endpoint syntax: http://localhost:3000/author_ajax?start=0&length=10&search=
     # note that there are 2 columns in this table:
     # Name | Quotes  
     @result = parse_datatable_ajax(@@column_names)

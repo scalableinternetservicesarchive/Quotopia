@@ -5,8 +5,9 @@ class CategoriesController < ApplicationController
   @@column_names = ["content", "quote_count"]
 
   def category_ajax
+    # endpoint syntax: http://localhost:3000/category_ajax?start=0&length=10&search=
     # note that there are 3 columns in this table:
-    # Rank | Name | Quotes  
+    # Name | Quotes  
        
     @result = parse_datatable_ajax(@@column_names)
     @result["recordsTotal"] = Category.count
