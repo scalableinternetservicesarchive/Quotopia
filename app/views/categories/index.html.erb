@@ -5,12 +5,10 @@
 
 <table class="table table-bordered" id="category-table">
   <thead>
-    <th>Rank</th>
     <th>Name</th>
     <th>Quotes</th>
   </thead>
   <tbody>
-    <%= render partial: "category", locals: {categories: @sorted} %>
   </tbody>
 </table>
 
@@ -21,7 +19,16 @@
 <%= javascript_include_tag "dataTables.bootstrap" %>
 <script type="text/javascript">
     $(document).ready(function(){
-        $('#category-table').DataTable();
+        $('#category-table').DataTable( {
+            "order": [[1, 'desc'], [0, 'asc']],
+            "processing": true,
+            "serverSide": true,
+            "ajax": "/category_ajax",
+            "columns": [
+                { "data": "content" },
+                { "data": "quote_count" }
+            ]
+        });
     });
 </script>
 

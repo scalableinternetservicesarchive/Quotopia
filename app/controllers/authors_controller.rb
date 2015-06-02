@@ -3,9 +3,26 @@ class AuthorsController < ApplicationController
   before_filter :authenticate_user!, :only => [:new, :edit, :update, :destroy]
   
   helper TweetsHelper
+
+  @@column_names = ["name", "quote_count"]
+
   def getAuthorsOrdered
     @authors = Author.order(quote_count: :desc, updated_at: :asc)
-  end 
+  end
+
+  def author_ajax 
+    # endpoint syntax: http://localhost:3000/author_ajax?start=0&length=10&search=
+    # note that there are 2 columns in this table:
+    # Name | Quotes  
+    @result = parse_datatable_ajax(@@column_names)
+    @result["recordsTotal"] = Author.count
+    @result["recordsFiltered"] = Author.where(@where).count
+    @categories = Author.select("name, quote_count").where(@where).order(@order).limit(@length).offset(@start).to_a
+    @result["data"] = @categories
+    
+    puts render json: @result
+  end
+
   # GET /authors
   # GET /authors.json
   def index

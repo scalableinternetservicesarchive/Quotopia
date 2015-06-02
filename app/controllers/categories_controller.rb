@@ -2,16 +2,20 @@ class CategoriesController < ApplicationController
   before_action :set_category, only: [:show, :edit, :update, :destroy]
   before_filter :authenticate_user!, :only => [:new, :edit, :update, :destroy]
   
-  def category_ajax
-    # note that there are 3 columns in this table:
-    # Rank | Name | Quotes  
-    @draw = params[:draw]
-    @start = params[:start] #row index to start at (0-indexed)
-    @length = params[:length] # the number of results to return
-    @search = params[:search]["value"] #the search query to filter over
-    @order = params[:order] # ordering information
-    @columns = params[:columns] # column information
+  @@column_names = ["content", "quote_count"]
 
+  def category_ajax
+    # endpoint syntax: http://localhost:3000/category_ajax?start=0&length=10&search=
+    # note that there are 3 columns in this table:
+    # Name | Quotes  
+       
+    @result = parse_datatable_ajax(@@column_names)
+    @result["recordsTotal"] = Category.count
+    @result["recordsFiltered"] = Category.where(@where).count
+    @categories = Category.select("content, quote_count").where(@where).order(@order).limit(@length).offset(@start).to_a
+    @result["data"] = @categories
+    
+    puts render json: @result
   end
 
   # GET /categories

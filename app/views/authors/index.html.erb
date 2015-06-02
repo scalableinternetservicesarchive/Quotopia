@@ -5,14 +5,13 @@
 <table class="table table-bordered" id="author-table">
   <thead>
     <tr>
-      <th>Rank</th>
       <th>Name</th>
       <th>Quotes</th>
     </tr>
   </thead>
 
   <tbody>
-    <%= render partial: "author", locals: {authors: @authors} %>
+    <%#= render partial: "author", locals: {authors: @authors} %>
   </tbody>
 </table>
 
@@ -23,7 +22,16 @@
 <%= javascript_include_tag "dataTables.bootstrap" %>
 <script type="text/javascript">
     $(document).ready(function(){
-        $('#author-table').DataTable();
+        $('#author-table').DataTable( {
+            "order": [[1, 'desc'], [0, 'asc']],
+            "processing": true,
+            "serverSide": true,
+            "ajax": "/author_ajax",
+            "columns": [
+                { "data": "name" },
+                { "data": "quote_count" }
+            ]
+        });
     });
 </script>
 <% if user_signed_in? %>

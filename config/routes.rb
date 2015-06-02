@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   get '/typeahead', to: 'searches#typeahead'
 
   get '/category_ajax', to: 'categories#category_ajax'
+  get '/author_ajax', to: 'authors#author_ajax'
 
   resources :favorite_quotes
   resources :votes
