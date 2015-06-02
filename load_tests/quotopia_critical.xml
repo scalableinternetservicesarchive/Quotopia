@@ -97,6 +97,31 @@
             <thinktime value="2" random="true"/>
           </for>
 
+          <!-- Visit 5 pages of all time quotes -->
+          <for from="1" to="5" incr="1" var="pagenum">
+            <request subst="true">
+              <dyn_variable name="alltime_quote_id_list" jsonpath="[*].id"/>
+              <http url="/home/index.json?page=%%_pagenum%%&amp;tab=all-time" method="GET"/>
+            </request>
+
+            <!-- Wait up to 2 seconds before visiting a random quote on the alltime page" -->
+            <thinktime value="2" random="true"/>
+            <setdynvars sourcetype="eval"
+                        code="fun({Pid,DynVars})->
+                        {ok,Val}=ts_dynvars:lookup('alltime_quote_id_list',DynVars),
+                        Rand = random:uniform(length(Val)),
+                        lists:nth(Rand,Val)
+                        end.">
+              <var name="alltime_quote_id"/>
+            </setdynvars>
+            <request subst="true">
+              <http url="/quotes/%%_alltime_quote_id%%" method="GET"/>
+            </request>
+
+            <!-- Look at quote for up to 2 seconds -->
+            <thinktime value="2" random="true"/>
+          </for>
+
           <!-- Visit the authors page -->
           <request>
             <dyn_variable name="author_id_list" jsonpath="[*].id"/>
@@ -297,7 +322,7 @@
       <request subst="true">
         <http url="/quotes?search=%%_quote_content%%" version="1.1" method="GET"/>
       </request>
-        
+
       <!-- Delete newly created quote -->
       <request subst="true">
         <http url="/quotes/%%_created_quote_id%%.json" method="DELETE">
