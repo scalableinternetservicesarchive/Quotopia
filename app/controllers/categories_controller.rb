@@ -25,9 +25,9 @@ class CategoriesController < ApplicationController
     unless @search.empty?
         @columns.each { |col_num, column|
             if column["searchable"] == "true" && @where != ""
-                @where += " OR #{column["data"]} like %#{@search}%"
+                @where += " OR #{column["data"]} like '%#{@search}%'"
             elsif column["searchable"] == "true"
-                @where += "#{column["data"]} like %#{@search}%"
+                @where += "#{column["data"]} like '%#{@search}%'"
             end
         }
     end 
@@ -52,7 +52,7 @@ class CategoriesController < ApplicationController
     end
 
     @result["recordsFiltered"] = Category.where(@where).count
-    @categories = Category.select("content as name, quote_count as Quotes").where(@where).order(@order).limit(@length).offset(@start).to_a
+    @categories = Category.select("content, quote_count").where(@where).order(@order).limit(@length).offset(@start).to_a
     @result["data"] = @categories
     
     puts render json: @result
