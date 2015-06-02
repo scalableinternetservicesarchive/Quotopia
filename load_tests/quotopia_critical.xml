@@ -373,6 +373,7 @@
         </request>
 
         <!-- Wait up to 2 seconds before deciding to edit the quote -->
+        <thinktime value="2" random="true"/>
         <request subst="true">
           <http url="/quotes/%%_random_quote_id%%/edit" method="GET"/>
         </request>
