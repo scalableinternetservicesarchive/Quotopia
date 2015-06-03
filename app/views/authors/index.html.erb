@@ -30,7 +30,14 @@
             "columns": [
                 { "data": "name" },
                 { "data": "quote_count" }
-            ]
+            ],
+            "columnDefs": [ {
+                "targets": 0,
+                "data": "content",
+                "render": function (data, type, full, meta) {
+                    return "<a href='/authors/" + full.id + "'>" + full.name+ "</a>";
+                }
+            } ]
         });
     });
 </script>

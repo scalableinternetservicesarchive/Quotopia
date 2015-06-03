@@ -27,7 +27,14 @@
             "columns": [
                 { "data": "content" },
                 { "data": "quote_count" }
-            ]
+            ],
+            "columnDefs": [ {
+                "targets": 0,
+                "data": "content",
+                "render": function (data, type, full, meta) {
+                    return "<a href='/categories/" + full.id + "'>" + full.content + "</a>";
+                }
+            } ]
         });
     });
 </script>
