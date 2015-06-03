@@ -55,7 +55,7 @@
       </options>
 
       <sessions>
-<!--------------------------------------------------------------------------------------->
+
         <!-- Read-only -->
         <session name="unauthed-browse" probability="35" type="ts_http">
           <!-- Visit homepage -->
@@ -184,9 +184,9 @@
         <thinktime value="2" random="true"/>
       </for>
     </session> 
-<!--------------------------------------------------------------------------------------->
 
-<!--------------------------------------------------------------------------------------->
+
+
     <session name="category-centric" probability="15" type="ts_http">
       <!-- Visit home page -->
       <request>
@@ -247,7 +247,7 @@
       </for>
 
     </session>
-<!--------------------------------------------------------------------------------------->
+
 
     <!-- Critical path mixed read/write -->
     <session name="general-browse" probability="30" type="ts_http">
@@ -414,7 +414,7 @@
       <!--</setdynvars>-->
 
       </session>
-<!--------------------------------------------------------------------------------------->
+
       <!-- Only edit -->
       <session name="authed-edit" probability="5" type="ts_http">
         <setdynvars sourcetype="file" fileid="users" delimiter="," order="random">
@@ -459,7 +459,7 @@
 
         <!-- Edit the quote -->
         <request subst="true">
-          <http url="/quotes/%%_random_quote_id%%/edit" method="GET"
+          <http url="/quotes/%%_random_quote_id%%/edit" method="GET"/>
         </request>
         <setdynvars sourcetype="random_string" length="100">
           <var name="random_quote_content"/>
@@ -469,6 +469,6 @@
                 contents="utf8=%E2%9C%93&amp;authenticity_token=12345&amp;quote%5Bcontent%5D=%%_random_quote_content%%&amp;quote%5Bauthor_attributes%5D%5Bname%5D=%%_author_name%%&amp;quote%5Bcategory_list%5D=%%_category_list%%&amp;button="/>
         </request>
       </session>
-<!--------------------------------------------------------------------------------------->
+
     </sessions>
 </tsung>
