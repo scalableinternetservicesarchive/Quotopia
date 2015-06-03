@@ -41,17 +41,17 @@ class VotesController < ApplicationController
     respond_to do |format|
       if !@present && @vote.save
         format.html { redirect_to @vote, notice: 'Vote was successfully created.' }
-        format.json { render :show, status: :created, location: @vote }
+        format.json { render json: @vote, status: :created }
         format.js {}
       else
         if @vote.value == vote_params[:value]
           format.html { redirect_to @vote, notice: 'Vote was unchanged.' }
-          format.json { render :show, status: :ok, location: @vote }
+          format.json { render json: @vote, status: :ok, location: @vote }
           format.js {}
         elsif @vote.value != vote_params[:value]
           if @vote.destroy
             format.html { redirect_to @vote, notice: 'Vote was successfully destroyed.' }
-            format.json { render :show, status: :ok, location: @vote }
+            format.json { head :no_content }
             format.js {render action: "update"}
           else
             format.html { render :new }
@@ -87,9 +87,25 @@ class VotesController < ApplicationController
   # DELETE /votes/1
   # DELETE /votes/1.json
   def destroy
-    @vote.destroy
     respond_to do |format|
-      format.html { redirect_to votes_url, notice: 'Vote was successfully destroyed.' }
+      if @vote.destroy
+        format.html { redirect_to votes_url, notice: 'Vote was successfully destroyed.' }
+        format.json { head :no_content }
+      else
+        format.json { head :no_content }
+      end
+    end
+  end
+
+  # PUT /votes/:quote_id/:user_id
+  # PUT /votes/:quote_id/:user_id.json
+  def destroy_from_params
+    @vote = Vote.where(quote_id: params[:quote_id], user_id: params[:user_id]).first
+    if !@vote.nil?
+      @vote.destroy
+    end
+    respond_to do |format|
+      format.html { redirect_to votes_url, notice: 'Favorite quote  was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
