@@ -121,7 +121,7 @@
 
     </session>
 
-    <session name="author-centric" probability="15" type="ts_http">
+    <session name="author-centric" probability="10" type="ts_http">
       <!-- Visit home page -->
       <request>
         <http url="/" version="1.1" method="GET"/>
@@ -137,13 +137,11 @@
       </request>
 
       <!-- Perform a random search -->
-      <request>
-        <setdynvars sourcetype="file" fileid="search_str" delimiter="," order="random">
-          <var name="search_param"/>
-        </setdynvars>
-        <request subst="true">
-          <http url="/search?utf8=%E2%9C%93&amp;q=%%_search_param%%" version="1.1" method="GET"/>
-        </request>
+      <setdynvars sourcetype="file" fileid="search_str" delimiter="," order="random">
+        <var name="search_param"/>
+      </setdynvars>
+      <request subst="true">
+        <http url="/search?utf8=%E2%9C%93&amp;q=%%_search_param%%" version="1.1" method="GET"/>
       </request>
 
       <!-- Visit the authors page -->
@@ -183,7 +181,7 @@
 
 
 
-    <session name="category-centric" probability="15" type="ts_http">
+    <session name="category-centric" probability="10" type="ts_http">
       <!-- Visit home page -->
       <request>
         <http url="/" version="1.1" method="GET"/>
@@ -198,14 +196,12 @@
         </http>
       </request>
 
-      <!-- Perform a random search --> 
-      <request>
-        <setdynvars sourcetype="file" fileid="search_str" delimiter="," order="random">
-          <var name="search_param"/>
-        </setdynvars>
-        <request subst="true">
-          <http url="/search?utf8=%E2%9C%93&amp;q=%%_search_param%%" version="1.1" method="GET"/>
-        </request>
+      <!-- Perform a random search -->
+      <setdynvars sourcetype="file" fileid="search_str" delimiter="," order="random">
+        <var name="search_param"/>
+      </setdynvars>
+      <request subst="true">
+        <http url="/search?utf8=%E2%9C%93&amp;q=%%_search_param%%" version="1.1" method="GET"/>
       </request>
 
       <!-- Visit the categories page -->
@@ -246,7 +242,7 @@
 
 
     <!-- Critical path mixed read/write -->
-    <session name="general-browse" probability="30" type="ts_http">
+    <session name="general-browse" probability="40" type="ts_http">
       <setdynvars sourcetype="file" fileid="users" delimiter="," order="random">
        <var name="user_name"/>
        <var name="user_password"/>
