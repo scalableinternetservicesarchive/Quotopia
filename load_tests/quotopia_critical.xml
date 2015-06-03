@@ -383,7 +383,8 @@
         <http url="/quotes/new" version="1.1" method="GET"/>
       </request>
       <request subst="true">
-        <dyn_variable name="created_quote_id" jsonpath="[*].id"/>
+        <dyn_variable name="created_quote_id" jsonpath="$.id"/>
+        <dyn_variable name="created_author_id" jsonpath="author.id"/>
         <http url="/quotes.json" version="1.1" method="POST" contents="quote%5Bcontent%5D=%%_quote_content%%&amp;quote%5Bauthor_attributes%5D%5Bname%5D=%%_quote_author%%&amp;quote%5Bcategory_list%5D=%%_category%%&amp;button=">
         </http>
       </request>
@@ -397,6 +398,11 @@
       <request subst="true">
         <http url="/quotes/%%_created_quote_id%%.json" method="DELETE">
         </http>
+      </request>
+
+      <!-- Delete newly created author associated with quote -->
+      <request subst="true">
+        <http url="/authors/%%_created_author_id%%.json" method="DELETE"/>
       </request>
 
       <!--<setdynvars sourcetype="eval" code="fun( {Pid, DynVars} ) ->-->
