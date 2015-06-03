@@ -457,10 +457,6 @@
           <http url="/quotes/%%_random_quote_id%%/edit" method="GET"/>
         </request>
 
-        <!-- Edit the quote -->
-        <request subst="true">
-          <http url="/quotes/%%_random_quote_id%%/edit" method="GET"/>
-        </request>
         <setdynvars sourcetype="random_string" length="100">
           <var name="random_quote_content"/>
         </setdynvars>
@@ -468,7 +464,12 @@
           <http url="/quotes/%%_random_quote_id%%.json" method="PUT"
                 contents="utf8=%E2%9C%93&amp;authenticity_token=12345&amp;quote%5Bcontent%5D=%%_random_quote_content%%&amp;quote%5Bauthor_attributes%5D%5Bname%5D=%%_author_name%%&amp;quote%5Bcategory_list%5D=%%_category_list%%&amp;button="/>
         </request>
+        
+        <!-- Mimic redirect behavior -->
+        <request subst="true">
+          <http url="/quotes/%%_random_quote_id%%" method="GET"/>
+        </request>
+        
       </session>
-
     </sessions>
 </tsung>
