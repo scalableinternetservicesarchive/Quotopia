@@ -17,7 +17,7 @@ class AuthorsController < ApplicationController
     @result = parse_datatable_ajax(@@column_names)
     @result["recordsTotal"] = Author.count
     @result["recordsFiltered"] = Author.where(@where).count
-    @categories = Author.select("name, quote_count").where(@where).order(@order).limit(@length).offset(@start).to_a
+    @categories = Author.select("id, name, quote_count").where(@where).order(@order).limit(@length).offset(@start).to_a
     @result["data"] = @categories
     
     puts render json: @result

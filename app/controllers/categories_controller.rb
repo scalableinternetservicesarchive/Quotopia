@@ -12,7 +12,7 @@ class CategoriesController < ApplicationController
     @result = parse_datatable_ajax(@@column_names)
     @result["recordsTotal"] = Category.count
     @result["recordsFiltered"] = Category.where(@where).count
-    @categories = Category.select("content, quote_count").where(@where).order(@order).limit(@length).offset(@start).to_a
+    @categories = Category.select("id, content, quote_count").where(@where).order(@order).limit(@length).offset(@start).to_a
     @result["data"] = @categories
     
     puts render json: @result
