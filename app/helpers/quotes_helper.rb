@@ -7,9 +7,9 @@ module QuotesHelper
     "quotes/tab-#{tab}/page-#{page}/#{max_updated_at}"
   end
 
-  def cache_key_for_quote(quote, tab, page)
+  def cache_key_for_quote(quote, display_author)
     updated_at = quote.updated_at.try(:utc).try(:to_s, :number)
-    "quote/tab-#{tab}/#{quote.id}/#{updated_at}"
+    "quote/#{quote.id}/#{display_author}/#{updated_at}"
   end
 
 end

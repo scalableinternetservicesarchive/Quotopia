@@ -20,22 +20,24 @@
                     <span class="fa fa-2x fa-chevron-down gray" aria-hidden="true" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Sign in to downvote"></span>
                 <% end %>
             </div>
-            <div class="col-xs-8 col-xs-height quote-text panel panel-default center" id="quote-panel">
-                <% div_id = "quote_#{quote.id}" %>
-                <div onclick="location.href='<%=quote_path(quote.id)%>';" style="cursor: pointer;" class="panel-body quote-content no-highlight over">
-                    <%= quote.content %>
-                    <% if display_author %>
-                        <div class="author-name">-  <a class="no-bubble" href="<%= author_path(quote.author_id) %>"><%= quote.author_name %></a> </div>
-                    <% end %>
-                    <br>
-                  <%= javascript_tag do %>
-                      $('.no-bubble').click(function(event) {
-                        event.stopImmediatePropagation();
-                      });
+            <% cache(cache_key_for_quote(quote, display_author)) do %>
+                <div class="col-xs-8 col-xs-height quote-text panel panel-default center" id="quote-panel">
+                    <% div_id = "quote_#{quote.id}" %>
+                    <div onclick="location.href='<%=quote_path(quote.id)%>';" style="cursor: pointer;" class="panel-body quote-content no-highlight over">
+                        <%= quote.content %>
+                        <% if display_author %>
+                            <div class="author-name">-  <a class="no-bubble" href="<%= author_path(quote.author_id) %>"><%= quote.author_name %></a> </div>
+                        <% end %>
+                        <br>
+                      <%= javascript_tag do %>
+                          $('.no-bubble').click(function(event) {
+                            event.stopImmediatePropagation();
+                          });
 
-                  <% end %>
+                      <% end %>
+                    </div>
                 </div>
-            </div>
+            <% end %>
     <div class="col-xs-2 col-xs-height col-middle center quote-buttons">
         <div class="quote-buttons">
             <% if user_signed_in? %>
