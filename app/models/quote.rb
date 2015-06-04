@@ -1,8 +1,8 @@
 require 'digest/md5'
 
 class Quote < ActiveRecord::Base
-  include Elasticsearch::Model
-  include Elasticsearch::Model::Callbacks
+#  include Elasticsearch::Model
+#  include Elasticsearch::Model::Callbacks
 
   belongs_to :author, :touch => true
   # belongs_to :submitter, class_name: 'User', foreign_key: 'user_id' if keep tracking of user-submissions does not work

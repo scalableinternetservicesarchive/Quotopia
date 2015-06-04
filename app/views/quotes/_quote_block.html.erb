@@ -15,7 +15,6 @@
     author = nil if local_assigns[:author].nil?
     categories = nil if local_assigns[:categories].nil?
 %>
-<% quotes.each do |quote| %>
     <%
         @author_string = author.nil? ? quote.author_name : author
         if @allow_twitter    
@@ -34,6 +33,7 @@
                 <span class="fa fa-2x fa-chevron-down gray" aria-hidden="true" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Sign in to downvote"></span>
             <% end %>
         </div>
+        <% cache(cache_key_for_quote(quote, display_author)) do %>
         <div class="col-xs-8 col-xs-height quote-text panel panel-default center" id="quote-panel">
             <% div_id = "quote_#{quote.id}" %>
             <div onclick="location.href='<%=quote_path(quote.id)%>';" style="cursor: pointer;" class="panel-body quote-content no-highlight over">
@@ -50,7 +50,7 @@
               <% end %>
             </div>
         </div>
-        
+        <% end %>
     <div class="col-xs-2 col-xs-height col-middle center quote-buttons">
         <div class="quote-buttons">
             <% if @user_signed_in %>
@@ -71,4 +71,3 @@
         </div>
     </div>
 
-<% end %>

@@ -92,6 +92,4 @@ end
 
 gem 'mocha', group: :test
 
-# new relic performance monitoring
-gem 'newrelic_rpm'
 

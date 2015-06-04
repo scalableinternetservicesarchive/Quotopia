@@ -10,7 +10,7 @@ class HomeController < ApplicationController
                        .joins("LEFT JOIN( SELECT id as favorite_ID, quote_id from favorite_quotes 
                                           WHERE user_id = " + current_user.id.to_s + ") as favorites on quotes.id = favorites.quote_id")
                        .order(vote_count: :desc)
-                       .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id, favorite_id, vote_id, vote_value, vote_count")
+                       .select("quotes.id, quotes.content, quotes.updated_at, authors.name as author_name, authors.id as author_id, favorite_id, vote_id, vote_value, vote_count")
                        .all.page(params[:page])
       elsif user_signed_in?
         # the LEFT JOIN is for pulling votes for the vote component in
@@ -21,12 +21,12 @@ class HomeController < ApplicationController
                        .joins("LEFT JOIN( SELECT id as favorite_ID, quote_id from favorite_quotes 
                                           WHERE user_id = " + current_user.id.to_s + ") as favorites on quotes.id = favorites.quote_id")
                        .order(vote_count: :desc)
-                       .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id, favorite_id, vote_id, vote_value, vote_count")
+                       .select("quotes.id, quotes.content, quotes.updated_at, authors.name as author_name, authors.id as author_id, favorite_id, vote_id, vote_value, vote_count")
                        .all.page(params[:page])
       else
         @quotes = Quote.joins(:author)
                        .order(vote_count: :desc)
-                       .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id, vote_count")
+                       .select("quotes.id, quotes.content, quotes.updated_at, authors.name as author_name, authors.id as author_id, vote_count")
                        .all.page(params[:page])
       end
       @tab_id = "all-time"
@@ -39,7 +39,7 @@ class HomeController < ApplicationController
                                             WHERE user_id = " + current_user.id.to_s + ") as favorites on quotes.id = favorites.quote_id")
                        .joins("LEFT JOIN( select id as vote_id, quote_id, value as vote_value from votes 
                                WHERE user_id = " + current_user.id.to_s + ") as user_votes on quotes.id = user_votes.quote_id")
-                       .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id, favorite_id, vote_id, vote_value, vote_count")
+                       .select("quotes.id, quotes.content, quotes.updated_at, authors.name as author_name, authors.id as author_id, favorite_id, vote_id, vote_value, vote_count")
                        .order("quotes.created_at DESC")
                        .all.page(params[:page])
       elsif user_signed_in?
@@ -48,12 +48,12 @@ class HomeController < ApplicationController
                                             WHERE user_id = " + current_user.id.to_s + ") as favorites on quotes.id = favorites.quote_id")
                        .joins("LEFT JOIN( select id as vote_id, quote_id, value as vote_value from votes 
                                WHERE user_id = " + current_user.id.to_s + ") as user_votes on quotes.id = user_votes.quote_id")
-                       .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id, favorite_id, vote_id, vote_value, vote_count")
+                       .select("quotes.id, quotes.content, quotes.updated_at, authors.name as author_name, authors.id as author_id, favorite_id, vote_id, vote_value, vote_count")
                        .order("quotes.created_at DESC")
                        .all.page(params[:page])
       else
         @quotes = Quote.joins(:author)
-                       .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id, vote_count")
+                       .select("quotes.id, quotes.content, quotes.updated_at, authors.name as author_name, authors.id as author_id, vote_count")
                        .order("quotes.created_at DESC")
                        .all.page(params[:page])
       end
@@ -76,7 +76,7 @@ class HomeController < ApplicationController
                        .joins("LEFT JOIN( select id as vote_id, quote_id, value as vote_value from votes 
                                WHERE user_id = " + current_user.id.to_s + ") as user_votes on quotes.id = user_votes.quote_id")
                        .order(vote_count: :desc)
-                       .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id, favorite_id, vote_id, vote_value, vote_count")
+                       .select("quotes.id, quotes.content, quotes.updated_at, authors.name as author_name, authors.id as author_id, favorite_id, vote_id, vote_value, vote_count")
                        .all.page(params[:page]) 
       elsif user_signed_in? 
         @quotes = Quote.where("quotes.created_at >= " + @interval_check)
@@ -86,13 +86,13 @@ class HomeController < ApplicationController
                        .joins("LEFT JOIN( select id as vote_id, quote_id, value as vote_value from votes 
                                WHERE user_id = " + current_user.id.to_s + ") as user_votes on quotes.id = user_votes.quote_id")
                        .order(vote_count: :desc)
-                       .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id, favorite_id, vote_id, vote_value, vote_count")
+                       .select("quotes.id, quotes.content, quotes.updated_at, authors.name as author_name, authors.id as author_id, favorite_id, vote_id, vote_value, vote_count")
                        .all.page(params[:page])
       else
         @quotes = Quote.where("quotes.created_at >= " + @interval_check)
                        .joins(:author)
                        .order(vote_count: :desc)
-                       .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id, vote_count")
+                       .select("quotes.id, quotes.content, quotes.updated_at, authors.name as author_name, authors.id as author_id, vote_count")
                        .all.page(params[:page])
       end
                            

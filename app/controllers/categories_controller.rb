@@ -42,7 +42,7 @@ class CategoriesController < ApplicationController
                          .joins("LEFT JOIN( SELECT id as vote_id, quote_id, value as vote_value from votes 
                                             WHERE user_id = " + current_user.id.to_s + ") as user_votes on quotes.id = user_votes.quote_id") 
                          .order(vote_count: :desc)
-                         .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id, favorite_id, vote_id, vote_value, vote_count")
+                         .select("quotes.id, quotes.content, quotes.updated_at, authors.name as author_name, authors.id as author_id, favorite_id, vote_id, vote_value, vote_count")
                          .all
                          .page(params[:page])
     elsif user_signed_in?
@@ -53,14 +53,14 @@ class CategoriesController < ApplicationController
                          .joins("LEFT JOIN( SELECT id as vote_id, quote_id, value as vote_value from votes 
                                             WHERE user_id = " + current_user.id.to_s + ") as user_votes on quotes.id = user_votes.quote_id") 
                          .order(vote_count: :desc)
-                         .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id, favorite_id, vote_id, vote_value, vote_count")
+                         .select("quotes.id, quotes.content, quotes.updated_at, authors.name as author_name, authors.id as author_id, favorite_id, vote_id, vote_value, vote_count")
                          .all
                          .page(params[:page])
     else
       @quotes = @category.quotes
                          .joins(:author)
                          .order(vote_count: :desc)
-                         .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id, vote_count")
+                         .select("quotes.id, quotes.content, quotes.updated_at, authors.name as author_name, authors.id as author_id, vote_count")
                          .all
                          .page(params[:page])
     end
