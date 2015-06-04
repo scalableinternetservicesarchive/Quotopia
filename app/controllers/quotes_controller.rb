@@ -25,6 +25,10 @@ class QuotesController < ApplicationController
     @comment = Comment.new
     @categories = @quote.categories.map {|c| '#' + c.content.gsub(/\s+/, "")}.join(' ')
     @tweet = "#{@quote.content} -#{@quote.author.name} #{@categories}".truncate(140)
+    respond_to do |format|
+        format.html { }
+        format.json { render json: @quote.as_json() }
+    end
   end
 
 
@@ -57,7 +61,7 @@ class QuotesController < ApplicationController
     respond_to do |format|
       if @quote.save
         format.html { redirect_to @quote, notice: 'Quote was successfully created.' }
-        format.json { render :show, status: :created, location: @quote }
+        format.json { render json: @quote.as_json(), status: :created }
       else
         format.html { render :new }
         format.json { render json: @quote.errors, status: :unprocessable_entity }
@@ -102,6 +106,20 @@ class QuotesController < ApplicationController
     @quote.destroy
     respond_to do |format|
       format.html { redirect_to quotes_url, notice: 'Quote was successfully destroyed.' }
+      format.json { head :no_content }
+    end
+  end
+
+  # PUT /quotes/:content/:author/:user_id
+  # PUT /quotes/:content/:author/:user_id.json
+  def destroy_from_params
+    @author = Author.where(name: params[:author]).first
+    @quote = Quote.where(content: params[:content], author_id: @author.id).first
+    if !@quote.nil?
+      @quote.destroy
+    end
+    respond_to do |format|
+      format.html { redirect_to root_url, notice: 'Quote was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
