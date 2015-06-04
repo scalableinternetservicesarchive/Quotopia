@@ -19,6 +19,7 @@ class Quote < ActiveRecord::Base
   validates :content_hash, uniqueness: {scope: :author, case_sensitive: false,
                     message: "quote should be unique per author"}
   validates :author, presence: true
+  validates :user, presence: true
 
   # This determines how many quotes to display per page
   paginates_per 7
@@ -66,6 +67,14 @@ class Quote < ActiveRecord::Base
     self.categories.collect do |category|
       category.content
       end.join(", ")
+  end
+
+  def as_json(options={})
+    super(:only => [:id, :content],
+    :include => {
+        :author => {:only => [:id, :name]},
+        :categories => {:only => [:content]}
+    })
   end
 
 end

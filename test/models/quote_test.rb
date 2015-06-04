@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class QuoteTest < ActiveSupport::TestCase
-  fixtures :quotes
+  fixtures :quotes, :users
 
   test "quote content must not be empty" do
     quote = Quote.new
@@ -42,7 +42,7 @@ class QuoteTest < ActiveSupport::TestCase
   end
 
   test "should save quote with unique content and author" do
-    quote = Quote.new(content: "MyString", author: Author.new(name: 'Roger'))
+    quote = Quote.new(content: "MyString", author: Author.new(name: 'Roger'), user: users(:lonelyguy))
     assert quote.save
   end
 
@@ -58,32 +58,32 @@ class QuoteTest < ActiveSupport::TestCase
   end
 
   test "quote is valid with unique content and non-unique author" do
-    quote = Quote.new(content_hash: Digest::MD5.hexdigest("MyString"), content: "MyString", author: quotes(:thomas_aquinas_quote).author)
+    quote = Quote.new(content_hash: Digest::MD5.hexdigest("MyString"), content: "MyString", author: quotes(:thomas_aquinas_quote).author, user: users(:lonelyguy))
     assert quote.valid?
   end
 
   test "should save quote with unique content and non-unique author" do
-    quote = Quote.new(content_hash: Digest::MD5.hexdigest("MyString"), content: "MyString", author: quotes(:thomas_aquinas_quote).author)
+    quote = Quote.new(content_hash: Digest::MD5.hexdigest("MyString"), content: "MyString", author: quotes(:thomas_aquinas_quote).author, user: users(:lonelyguy))
     assert quote.save
   end
 
   test "quote is valid with non-unique content and unique author" do
-    quote = Quote.new(content: quotes(:one), author: Author.new(name: 'Roger'))
+    quote = Quote.new(content: quotes(:one), author: Author.new(name: 'Roger'), user: users(:lonelyguy))
     assert quote.valid?
   end
 
   test "quote is valid with non-unique content (case-insensitive) and unique author" do
-    quote = Quote.new(content: quotes(:one).content.upcase, author: Author.new(name: 'Roger'))
+    quote = Quote.new(content: quotes(:one).content.upcase, author: Author.new(name: 'Roger'), user: users(:lonelyguy))
     assert quote.valid?
   end
 
   test "should save quote with non-unique content and unique author" do
-    quote = Quote.new(content: quotes(:one), author: Author.new(name: 'Roger'))
+    quote = Quote.new(content: quotes(:one), author: Author.new(name: 'Roger'), user: users(:lonelyguy))
     assert quote.save
   end
 
   test "should save quote with non-unique content (case-insensitive) and unique author" do
-    quote = Quote.new(content: quotes(:one).content.upcase, author: Author.new(name: 'Roger'))
+    quote = Quote.new(content: quotes(:one).content.upcase, author: Author.new(name: 'Roger'), user: users(:lonelyguy))
     assert quote.save
   end
 
