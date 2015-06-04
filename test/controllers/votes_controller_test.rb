@@ -33,10 +33,10 @@ class VotesControllerTest < ActionController::TestCase
   end
 
   test "should not create vote with same user_id and quote_id" do
-    post :create, vote: { vote: { value: 1, quote_id: 1, user_id: 1 } }
+    post :create, vote: { vote: { value: "1", quote_id: 1, user_id: 1 } }
  
    assert_no_difference('Vote.count') do
-       post :create, vote: { vote: { value: 1, quote_id: 1, user_id: 1 } }
+       post :create, vote: { vote: { value: "1", quote_id: 1, user_id: 1 } }
    end
   end
 
