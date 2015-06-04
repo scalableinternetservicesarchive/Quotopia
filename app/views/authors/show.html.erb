@@ -5,9 +5,7 @@
 <hr>
 <ul>
   <% @author_quotes.each do |quote| %>
-      <%= cache cache_key_for_author_quote(@author, quote, params[:page]) do %>
-        <%= render partial: "quotes/quote_block", locals: {quote: quote, display_author: false, author: @author.name} %>
-      <% end %>
+    <%= render partial: "quotes/quote_block", locals: {quote: quote, display_author: false, author: @author.name} %>
   <% end %>
 </ul>
 <% unless @author_quotes.nil? %>
