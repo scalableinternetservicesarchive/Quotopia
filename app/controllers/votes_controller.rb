@@ -44,11 +44,11 @@ class VotesController < ApplicationController
         format.json { render json: @vote, status: :created }
         format.js {}
       else
-        if @vote.value == vote_params[:value]
+        if @vote.value.to_s == vote_params[:value]
           format.html { redirect_to @vote, notice: 'Vote was unchanged.' }
           format.json { render json: @vote, status: :ok, location: @vote }
           format.js {}
-        elsif @vote.value != vote_params[:value]
+        elsif @vote.value.to_s != vote_params[:value]
           if @vote.destroy
             format.html { redirect_to @vote, notice: 'Vote was successfully destroyed.' }
             format.json { head :no_content }
