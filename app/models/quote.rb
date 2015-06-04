@@ -8,7 +8,7 @@ class Quote < ActiveRecord::Base
   has_many :votes, dependent: :destroy
   has_many :users, :through => :votes
   has_many :comments, dependent: :destroy
-  has_many :categorizations
+  has_many :categorizations, dependent: :destroy
   has_many :categories, :through => :categorizations
   has_many :favorite_quotes, dependent: :destroy
   has_many :favorited_by, through: :favorite_quotes, source: :user  # users that favorite a quote
@@ -20,6 +20,7 @@ class Quote < ActiveRecord::Base
   validates :content_hash, uniqueness: {scope: :author, case_sensitive: false,
                     message: "quote should be unique per author"}
   validates :author, presence: true
+  validates :user, presence: true
 
   def as_indexed_json(options={})
       as_json(
@@ -73,6 +74,14 @@ class Quote < ActiveRecord::Base
     self.categories.collect do |category|
       category.content
       end.join(", ")
+  end
+
+  def as_json(options={})
+    super(:only => [:id, :content],
+    :include => {
+        :author => {:only => [:id, :name]},
+        :categories => {:only => [:content]}
+    })
   end
 
 end
