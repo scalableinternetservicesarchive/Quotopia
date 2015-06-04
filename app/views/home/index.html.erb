@@ -35,10 +35,7 @@ $(document).ready(function(){
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active">
 <% end %> <!-- end cache block -->
-          <%# cache(cache_key_for_quotes(@quotes, params[:tab], params[:page])) do %>
-              <% @quotes.each do |quote| %>
-                <%= render partial: "quotes/quote_block", locals: {quote: quote} %>
-              <% end %>
+            <%= render partial: "quotes/quote_block", locals: {quotes: @quotes, display_author: true} %>
           <%# end %>
           <% unless @quotes.nil? %>
               <div class="pages">
