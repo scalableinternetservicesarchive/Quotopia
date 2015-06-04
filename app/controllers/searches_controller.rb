@@ -8,15 +8,16 @@ class SearchesController < ApplicationController
         #@search_quotes = Quote.search(params[:q]).page(params[:page])
         @results = map_to_obj(search_index(params[:q]))
         @search_quotes = Kaminari.paginate_array(@results).page(params[:page]).per(7)
-        #puts render json: map_to_obj(search_index(params[:q]))
-        puts render json: search_index(params[:q])
+        # puts render json: map_to_obj(search_index(params[:q]))
       else
         @search_quotes = nil
       end
     end
 
     def map_to_obj(results)
-        results.map do |result|
+        @quote_id_query = ""
+
+        @results = results.map do |result|
             @source = result["_source"]
             
             @author_name = @source["author"]["name"]
@@ -27,13 +28,52 @@ class SearchesController < ApplicationController
                 @author_name = result["highlight"]["name"].join('') if result["highlight"].has_key?("name")
                 @content = result["highlight"]["content"].join('') if result["highlight"].has_key?("content")
             end
+
+            @quote_id_query += "quote_id = #{@source["id"]} OR "
             @quote = OpenStruct.new(
                 :id => @source["id"],
                 :content => @content,
-                :author_id => @source["author"]["id"],
-                :author_name => @author_name
+                :author_id => @source["author_id"],
+                :author_name => @author_name,
+                :updated_at => @source["updated_at"],
+                :vote_count => @source["vote_count"]
             )
+            
         end
+        
+        @quote_id_query = @quote_id_query[0...-3]
+        @where = "(" + @quote_id_query + ") AND user_id = #{current_user.id.to_s}"
+        # query for the favorite, vote information if needed
+        if user_signed_in?
+            @favorites = {}
+            FavoriteQuote.where(@where).select("quote_id, id").each do |favorite|
+                @favorites[favorite.quote_id] = favorite.id
+            end
+
+            
+            @votes = {}
+            Vote.where(@where).select("quote_id, id, value as vote_value").each do |vote|
+                @votes[vote.quote_id] = { :value => vote.vote_value, :id => vote.id }
+            end
+            
+            #if allow_twitter
+            #    Category.joins("JOIN (SELECT)")
+            #end
+
+            @results = @results.map do |result|
+                @vote = @votes[result.id]
+                unless @vote.nil?
+                    result.vote_value = @votes[result.id]["value"]
+                    result.vote_id = @votes[result.id]["id"]
+                end
+
+                result.favorite_id = @favorites[result.id] 
+                result
+            end
+        end
+        
+        #puts render json: @results
+        return @results
     end
 
     def search_index(q)
