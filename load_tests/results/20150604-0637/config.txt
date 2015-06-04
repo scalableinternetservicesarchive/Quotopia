@@ -1,2 +1,0 @@
-m3.large, nginx+passenger, 1 app
-vertical scaling
