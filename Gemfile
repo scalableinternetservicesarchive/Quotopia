@@ -49,6 +49,8 @@ gem 'omniauth-twitter'
 gem 'twitter'
 gem 'omniauth'
 
+# for mysql Triggers
+gem 'hairtrigger'
 # multi_json for aws
 gem 'multi_json', '1.7.8'
 
@@ -60,7 +62,7 @@ group :development, :test do
   gem 'web-console', '~> 2.0'
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
+  gem 'spring','~> 1.3.6'
 
   gem 'stackprof'
   # Rack mini profile for performance monitoring
@@ -80,6 +82,7 @@ end
 
 group :production do
   gem 'mysql2'
+  gem 'newrelic_rpm'
 end
 
 gem 'mocha', group: :test

@@ -26,17 +26,27 @@ class FavoriteQuotesController < ApplicationController
   # POST /favorite_quotes
   # POST /favorite_quotes.json
   def create
-    @favorite_quote = FavoriteQuote.new(favorite_quote_params)
+    @favorite_quote = FavoriteQuote.where(quote_id: favorite_quote_params[:quote_id], user_id: favorite_quote_params[:user_id]).first
+    @present = @favorite_quote.present?
+    if !@present
+      @favorite_quote = FavoriteQuote.new(favorite_quote_params)
+    end
 
     respond_to do |format|
-      if @favorite_quote.save
+      if !@present && @favorite_quote.save
         format.html { redirect_to @favorite_quote, notice: 'Favorite quote was successfully created.' }
-        format.json { render :show, status: :created, location: @favorite_quote }
+        format.json { render json: @favorite_quote, status: :created }
         format.js {}
       else
-        format.html { render :new }
-        format.json { render json: @favorite_quote.errors, status: :unprocessable_entity }
-        format.js {}
+        if @favorite_quote.destroy
+          format.html { redirect_to favorite_quotes_url, notice: 'Favorite quote was successfully destroyed.' }
+          format.json { head :no_content }
+          format.js {}
+        else
+          format.html { render :new }
+          format.json { render json: @favorite_quote.errors, status: :unprocessable_entity }
+          format.js {}
+        end
       end
     end
   end
@@ -58,11 +68,27 @@ class FavoriteQuotesController < ApplicationController
   # DELETE /favorite_quotes/1
   # DELETE /favorite_quotes/1.json
   def destroy
-    @favorite_quote.destroy
     respond_to do |format|
-      format.html { redirect_to favorite_quotes_url, notice: 'Favorite quote was successfully destroyed.' }
+      if @favorite_quote.destroy
+        format.html { redirect_to favorite_quotes_url, notice: 'Favorite quote was successfully destroyed.' }
+        format.json { head :no_content }
+        format.js {}
+      else
+        format.json { head :no_content }
+      end
+    end
+  end
+
+  # PUT /favorite_quotes/:quote_id/:user_id
+  # PUT /favorite_quotes/:quote_id/:user_id.json
+  def destroy_from_params
+    @favorite = FavoriteQuote.where(quote_id: params[:quote_id], user_id: params[:user_id]).first
+    if !@favorite.nil?
+      @favorite.destroy
+    end
+    respond_to do |format|
+      format.html { redirect_to favorite_quotes_url, notice: 'Favorite quote  was successfully destroyed.' }
       format.json { head :no_content }
-      format.js {}
     end
   end
 

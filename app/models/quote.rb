@@ -8,9 +8,9 @@ class Quote < ActiveRecord::Base
   has_many :votes, dependent: :destroy
   has_many :users, :through => :votes
   has_many :comments, dependent: :destroy
-  has_many :categorizations
+  has_many :categorizations, dependent: :destroy
   has_many :categories, :through => :categorizations
-  has_many :favorite_quotes
+  has_many :favorite_quotes, dependent: :destroy
   has_many :favorited_by, through: :favorite_quotes, source: :user  # users that favorite a quote
 
   accepts_nested_attributes_for :author
@@ -20,6 +20,17 @@ class Quote < ActiveRecord::Base
   validates :content_hash, uniqueness: {scope: :author, case_sensitive: false,
                     message: "quote should be unique per author"}
   validates :author, presence: true
+  validates :user, presence: true
+
+  def as_indexed_json(options={})
+      as_json(
+          only: [:id, :content, :author_id],
+          include: {
+            categories: {only: :content},
+            author: {only: :name}
+          }
+      )
+  end
 
   def as_indexed_json(options={})
       as_json(
@@ -33,6 +44,19 @@ class Quote < ActiveRecord::Base
 
   # This determines how many quotes to display per page
   paginates_per 7
+
+  trigger.after(:insert) do
+    "UPDATE authors SET quote_count = quote_count + 1 WHERE NEW.author_id = id;"
+  end
+
+  trigger.after(:update) do
+    "UPDATE authors SET quote_count = quote_count + 1 WHERE NEW.author_id = id;"\
+    "UPDATE authors SET quote_count = quote_count - 1 WHERE OLD.author_id = id;"
+  end
+
+  trigger.after(:delete) do
+    "UPDATE authors SET quote_count = quote_count - 1 WHERE OLD.author_id = id;"
+  end
 
   def self.search(search)
     @quote = Quote.joins(:author, :categories)
@@ -60,6 +84,14 @@ class Quote < ActiveRecord::Base
     self.categories.collect do |category|
       category.content
       end.join(", ")
+  end
+
+  def as_json(options={})
+    super(:only => [:id, :content],
+    :include => {
+        :author => {:only => [:id, :name]},
+        :categories => {:only => [:content]}
+    })
   end
 
 end

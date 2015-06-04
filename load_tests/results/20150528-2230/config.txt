@@ -1,1 +1,0 @@
-m3.large, nginx+passenger single, 1 appserver

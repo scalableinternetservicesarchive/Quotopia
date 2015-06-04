@@ -5,21 +5,9 @@
 %>
 <% quotes.each do |quote| %>
     <%
-         @tweet_content = nil
-         if !author.nil?
-            @tweet_content = "#{quote.content} -#{author} "
-            for c in quote.categories do
-                @tweet_content = @tweet_content + "#" + c.content
-            end
-            @tweet_content.truncate(140)
-         elsif !categories.nil?
-            @tweet_content = "#{quote.content} -#{quote.author_name}" + " #" + categories.content
-         else
-            @tweet_content = "#{quote.content} -#{quote.author_name} "
-            for c in quote.categories do
-                @tweet_content = @tweet_content + "#" + c.content
-            end
-         end
+       @author_string = author.nil? ? quote.author_name : author
+       @categories_string = categories.nil? ? quote.categories.map {|c| '#' + c.content.gsub(/\s+/, "")}.join(' ') : "##{categories.content}"
+       @tweet_content = "#{quote.content} -#{@author_string} #{@categories_string}".truncate(140)
     %>
     <div class="quote row vertical-align">
         <div class="row-same-height">

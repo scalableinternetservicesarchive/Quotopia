@@ -1,6 +1,5 @@
 class VotesController < ApplicationController
   before_action :set_vote, only: [:show, :edit, :update, :destroy]
-  
 
   def quote_count
     @requested_quote_id = params[:quote_id]
@@ -32,18 +31,38 @@ class VotesController < ApplicationController
   # POST /votes
   # POST /votes.json
   def create
-    @vote = Vote.new(vote_params)
+    @vote = Vote.where(user_id: vote_params[:user_id], quote_id: vote_params[:quote_id]).first
+    @present = @vote.present?
+    if !@present
+      @vote = Vote.new(vote_params)
+    end
     @quote_id = @vote.quote_id
 
     respond_to do |format|
-      if @vote.save
+      if !@present && @vote.save
         format.html { redirect_to @vote, notice: 'Vote was successfully created.' }
-        format.json { render :show, status: :created, location: @vote }
+        format.json { render json: @vote, status: :created }
         format.js {}
       else
-        format.html { render :new }
-        format.json { render json: @vote.errors, status: :unprocessable_entity }
-        format.js {}
+        if @vote.value == vote_params[:value]
+          format.html { redirect_to @vote, notice: 'Vote was unchanged.' }
+          format.json { render json: @vote, status: :ok, location: @vote }
+          format.js {}
+        elsif @vote.value != vote_params[:value]
+          if @vote.destroy
+            format.html { redirect_to @vote, notice: 'Vote was successfully destroyed.' }
+            format.json { head :no_content }
+            format.js {render action: "update"}
+          else
+            format.html { render :new }
+            format.json { render json: @vote.errors, status: :unprocessable_entity }
+            format.js {}
+          end
+        else
+          format.html { render :new }
+          format.json { render json: @vote.errors, status: :unprocessable_entity }
+          format.js {}
+        end
       end
     end
   end
@@ -68,9 +87,25 @@ class VotesController < ApplicationController
   # DELETE /votes/1
   # DELETE /votes/1.json
   def destroy
-    @vote.destroy
     respond_to do |format|
-      format.html { redirect_to votes_url, notice: 'Vote was successfully destroyed.' }
+      if @vote.destroy
+        format.html { redirect_to votes_url, notice: 'Vote was successfully destroyed.' }
+        format.json { head :no_content }
+      else
+        format.json { head :no_content }
+      end
+    end
+  end
+
+  # PUT /votes/:quote_id/:user_id
+  # PUT /votes/:quote_id/:user_id.json
+  def destroy_from_params
+    @vote = Vote.where(quote_id: params[:quote_id], user_id: params[:user_id]).first
+    if !@vote.nil?
+      @vote.destroy
+    end
+    respond_to do |format|
+      format.html { redirect_to votes_url, notice: 'Favorite quote  was successfully destroyed.' }
       format.json { head :no_content }
     end
   end

@@ -11,18 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150521051918) do
+ActiveRecord::Schema.define(version: 20150530214815) do
 
   create_table "authors", force: :cascade do |t|
-    t.text     "name",       limit: 65535
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.text     "name",        limit: 65535
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.integer  "quote_count", limit: 4,     default: 0, null: false
   end
 
   create_table "categories", force: :cascade do |t|
-    t.string   "content",    limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.string   "content",     limit: 255
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.integer  "quote_count", limit: 4,   default: 0, null: false
   end
 
   add_index "categories", ["content"], name: "index_categories_on_content", unique: true, using: :btree
@@ -62,10 +64,11 @@ ActiveRecord::Schema.define(version: 20150521051918) do
     t.text     "content",      limit: 65535
     t.integer  "author_id",    limit: 4
     t.integer  "user_id",      limit: 4
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
     t.string   "content_hash", limit: 255
     t.text     "extra",        limit: 65535
+    t.integer  "vote_count",   limit: 4,     default: 0, null: false
   end
 
   add_index "quotes", ["author_id", "content_hash"], name: "index_quotes_on_author_id_and_content_hash", unique: true, using: :btree
@@ -117,4 +120,53 @@ ActiveRecord::Schema.define(version: 20150521051918) do
   add_foreign_key "quotes", "users"
   add_foreign_key "votes", "quotes"
   add_foreign_key "votes", "users"
+  create_trigger("votes_after_insert_row_tr", :generated => true, :compatibility => 1).
+      on("votes").
+      after(:insert) do
+    "UPDATE quotes SET vote_count = vote_count + NEW.value WHERE id = NEW.quote_id;"
+  end
+
+  create_trigger("votes_after_update_of_value_row_tr", :generated => true, :compatibility => 1).
+      on("votes").
+      after(:update).
+      of(:value) do
+    "UPDATE quotes SET vote_count = vote_count + (NEW.value - OLD.value) WHERE id = NEW.quote_id;"
+  end
+
+  create_trigger("votes_after_delete_row_tr", :generated => true, :compatibility => 1).
+      on("votes").
+      after(:delete) do
+    "UPDATE quotes SET vote_count = vote_count - OLD.value WHERE id = OLD.quote_id;"
+  end
+
+  create_trigger("categorizations_after_insert_row_tr", :generated => true, :compatibility => 1).
+      on("categorizations").
+      after(:insert) do
+    "UPDATE categories SET quote_count = quote_count + 1 WHERE NEW.category_id =  id;"
+  end
+
+  create_trigger("categorizations_after_delete_row_tr", :generated => true, :compatibility => 1).
+      on("categorizations").
+      after(:delete) do
+    "UPDATE categories SET quote_count = quote_count - 1 WHERE OLD.category_id = id;"
+  end
+
+  create_trigger("quotes_after_insert_row_tr", :generated => true, :compatibility => 1).
+      on("quotes").
+      after(:insert) do
+    "UPDATE authors SET quote_count = quote_count + 1 WHERE NEW.author_id = id;"
+  end
+
+  create_trigger("quotes_after_update_row_tr", :generated => true, :compatibility => 1).
+      on("quotes").
+      after(:update) do
+    "UPDATE authors SET quote_count = quote_count + 1 WHERE NEW.author_id = id;UPDATE authors SET quote_count = quote_count - 1 WHERE OLD.author_id = id;"
+  end
+
+  create_trigger("quotes_after_delete_row_tr", :generated => true, :compatibility => 1).
+      on("quotes").
+      after(:delete) do
+    "UPDATE authors SET quote_count = quote_count - 1 WHERE OLD.author_id = id;"
+  end
+
 end
