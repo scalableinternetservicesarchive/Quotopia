@@ -14,11 +14,11 @@
         if @vote.value == 1
             @allow_upvote = false
             @upvote_class = "fa-chevron-up gray"
-            @downvote_value = 0
+            @downvote_value = -1
         elsif @vote.value == -1
             @allow_downvote = false
             @downvote_class = "fa-chevron-down gray"
-            @upvote_value = 0
+            @upvote_value = 1
         end
     end
 %>
