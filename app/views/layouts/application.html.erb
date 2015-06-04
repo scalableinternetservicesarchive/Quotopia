@@ -1,3 +1,4 @@
+<% cache('layout') do %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +9,7 @@
 </head>
 
 <body>
-    <nav id="topbar" class="navbar navbar-default container-fluid"> 
+    <nav id="topbar" class="navbar navbar-default container-fluid">
         <div class="navbar-header" >
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
                 <span class="sr-only">Toggle navigation</span>
@@ -20,12 +21,13 @@
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav" style="display:inline;">
+<% end %>
                 <% if user_signed_in? %>
-                    <li class="<%=is_active('favorite_quotes')%>"><%= link_to "Favorites", '/favorite_quotes/user', 
+                    <li class="<%=is_active('favorite_quotes')%>"><%= link_to "Favorites", '/favorite_quotes/user',
                         :class => "nav-link ", :id => "fave-nav", :method => :get %></li>
-                <% end %>   
+                <% end %>
 
-                <li class="<%=is_active('authors')%>"><%= link_to "Authors", authors_path, 
+                <li class="<%=is_active('authors')%>"><%= link_to "Authors", authors_path,
                     :class => "nav-link", :id =>"author-nav", :method => :get %></li>
                  <li class="<%=is_active('categories')%>"><%= link_to "Categories", categories_path, :class => "nav-link", :id =>"category-nav", :method => :get %></li>
            </ul>
@@ -38,7 +40,7 @@
                 <% else %>
                    <li class="<%=is_active('devise/registrations')%>"> <%= link_to "My Account", edit_user_registration_path,
                         :class => " nav-link", :method => :get %></li>
-                   <li>  <%= link_to "Logout", destroy_user_session_path, 
+                   <li>  <%= link_to "Logout", destroy_user_session_path,
                         :class => " nav-link", :method => :delete %></li>
                    <li class="navbar-text" style="color:white;"> <b><%= current_user.email %></b></li>
                 <% end %>

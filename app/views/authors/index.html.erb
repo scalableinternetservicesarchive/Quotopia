@@ -1,3 +1,4 @@
+<%= cache cache_key_for_author_table(@authors) do %>
 <p id="notice"><%= notice %></p>
 <h1>"Who have said things?"</h1>
 <hr>
@@ -12,13 +13,12 @@
   </thead>
 
   <tbody>
-    <%= cache cache_key_for_author_table(@authors) do %>
-        <%= render partial: "author", locals: {authors: @authors} %>
-    <% end %>
+    <%= render partial: "author", locals: {authors: @authors} %>
   </tbody>
 </table>
 
 <br>
+<% end %> <!-- end caching block -->
 
 <%= stylesheet_link_tag "dataTables.fontAwesome.css" %>
 <%= javascript_include_tag "jquery.dataTables.min" %>

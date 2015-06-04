@@ -1,3 +1,4 @@
+<%= cache cache_key_for_category_table(@sorted) do %>
 <p id="notice"><%= notice %></p>
 
 <h1>Which Categories?</h1>
@@ -10,13 +11,12 @@
     <th>Quotes</th>
   </thead>
   <tbody>
-    <%= cache cache_key_for_category_table(@sorted) do %>
-        <%= render partial: "category", locals: {categories: @sorted} %>
-    <% end%>
+    <%= render partial: "category", locals: {categories: @sorted} %>
   </tbody>
 </table>
 
 <br>
+<% end %> <!-- end caching -->
 
 <%= stylesheet_link_tag "dataTables.fontAwesome.css" %>
 <%= javascript_include_tag "jquery.dataTables.min" %>
