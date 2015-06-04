@@ -12,6 +12,7 @@
         @allow_twitter = true
     end
 
+    # assume to display_author if not explicitly told not to
     display_author = true if local_assigns[:display_author].nil?
     
     # used for when we render from author#show
