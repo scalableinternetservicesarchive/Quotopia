@@ -5,9 +5,7 @@
 <hr>
 <ul>
   <% @quotes.each do |quote| %>
-      <%= cache cache_key_for_category_quote(@category, quote, params[:page]) do %>
-        <%= render partial: "quotes/quote_block", locals: {quote: quote, categories: @category} %>
-      <% end %>
+    <%= render partial: "quotes/quote_block", locals: {quote: quote, categories: @category} %>
   <% end %>
 </ul>
 <% unless @quotes.nil? %>
