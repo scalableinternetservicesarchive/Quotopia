@@ -23,7 +23,7 @@
     end
 %>
 <% if @allow_upvote %>
-    <%= link_to votes_path,
+    <%= link_to @votepath,
         data: { :method => @method, 
                 :remote => true, 
                 params: { vote: {value: @upvote_value, quote_id: quote.id, user_id: current_user_id }}.to_param
@@ -38,7 +38,7 @@
 <% end %>
 <h4 class="vote-count-<%=quote.id%>"><%= quote.vote_count %> </h4>
 <% if @allow_downvote %>
-    <%= link_to votes_path,
+    <%= link_to @votepath,
         data: { :method => @method, 
                 :remote => true, 
                 params: { vote: {value: @downvote_value, quote_id: quote.id, user_id: current_user_id }}.to_param

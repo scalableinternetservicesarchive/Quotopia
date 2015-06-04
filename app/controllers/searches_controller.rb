@@ -5,10 +5,10 @@ class SearchesController < ApplicationController
     
       if params[:q] && !params[:q].empty?
         @has_search = true
-        #@search_quotes = Quote.search(params[:q]).page(params[:page])
+        # @search_quotes = Quote.search(params[:q]).page(params[:page])
         @results = map_to_obj(search_index(params[:q]))
         @search_quotes = Kaminari.paginate_array(@results).page(params[:page]).per(7)
-        # puts render json: map_to_obj(search_index(params[:q]))
+        #puts render json: map_to_obj(search_index(params[:q]))
       else
         @search_quotes = nil
       end
@@ -56,17 +56,17 @@ class SearchesController < ApplicationController
                 @votes[vote.quote_id] = { :value => vote.vote_value, :id => vote.id }
             end
             
+            
             #if allow_twitter
             #    Category.joins("JOIN (SELECT)")
             #end
 
             @results = @results.map do |result|
                 @vote = @votes[result.id]
-                unless @vote.nil?
-                    result.vote_value = @votes[result.id]["value"]
-                    result.vote_id = @votes[result.id]["id"]
-                end
-
+                if !@votes[result.id].nil?
+                result.vote_value = @votes[result.id][:value]
+                result.vote_id = @votes[result.id][:id]
+                end 
                 result.favorite_id = @favorites[result.id] 
                 result
             end
