@@ -84,7 +84,7 @@ class Quote < ActiveRecord::Base
   end
 
   def as_json(options={})
-    super(:only => [:id, :content, :author_id, :vote_count, :updated_at],
+    super(:only => [:id, :content, :author_id, :updated_at],
     :include => {
         :author => {:only => [:id, :name]},
         :categories => {:only => [:content]}

@@ -7,8 +7,8 @@ class SearchesController < ApplicationController
         @has_search = true
         # @search_quotes = Quote.search(params[:q]).page(params[:page])
         @results = map_to_obj(search_index(params[:q]))
-        @search_quotes = Kaminari.paginate_array(@results).page(params[:page]).per(7)
-        #puts render json: map_to_obj(search_index(params[:q]))
+        #@search_quotes = Kaminari.paginate_array(@results).page(params[:page]).per(7)
+        puts render json: map_to_obj(search_index(params[:q]))
       else
         @search_quotes = nil
       end
@@ -16,6 +16,7 @@ class SearchesController < ApplicationController
 
     def map_to_obj(results)
         @quote_id_query = ""
+        @id_query = ""
 
         @results = results.map do |result|
             @source = result["_source"]
@@ -30,18 +31,26 @@ class SearchesController < ApplicationController
             end
 
             @quote_id_query += "quote_id = #{@source["id"]} OR "
+            @id_query += "id = #{@source["id"]} OR "
+
             @quote = OpenStruct.new(
                 :id => @source["id"],
                 :content => @content,
                 :author_id => @source["author_id"],
                 :author_name => @author_name,
                 :updated_at => @source["updated_at"],
-                :vote_count => @source["vote_count"]
             )
             
         end
         
         @quote_id_query = @quote_id_query[0...-3]
+        @id_query = @id_query[0...-3]
+
+        @vote_counts = {}
+        Quote.where(@id_query).select("id, vote_count").each do |quote|
+            @vote_counts[quote.id] = quote.vote_count
+        end
+        
         @where = "(" + @quote_id_query + ") AND user_id = #{current_user.id.to_s}"
         # query for the favorite, vote information if needed
         if user_signed_in?
@@ -61,17 +70,20 @@ class SearchesController < ApplicationController
             #    Category.joins("JOIN (SELECT)")
             #end
 
-            @results = @results.map do |result|
+        end
+        @results = @results.map do |result|
+            result.vote_count = @vote_counts[result.id]
+            if user_signed_in?
                 @vote = @votes[result.id]
                 if !@votes[result.id].nil?
-                result.vote_value = @votes[result.id][:value]
-                result.vote_id = @votes[result.id][:id]
+                    result.vote_value = @votes[result.id][:value]
+                    result.vote_id = @votes[result.id][:id]
                 end 
                 result.favorite_id = @favorites[result.id] 
-                result
             end
+            result
         end
-        
+
         #puts render json: @results
         return @results
     end
