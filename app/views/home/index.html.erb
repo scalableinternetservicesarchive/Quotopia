@@ -1,3 +1,4 @@
+<%= cache('mainpage') do %>
 <p id="notice"><%= notice %></p>
 <div id="alert-placeholder"></div>
 
@@ -26,14 +27,19 @@
 <br>
 <script>
 $(document).ready(function(){
-    $('[data-toggle="tooltip"]').tooltip();   
+    $('[data-toggle="tooltip"]').tooltip();
 });
 </script>
 
 <div class="row" id="quotes">
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active">
-          <%= render partial: "quotes/quote_block", locals: {quotes: @quotes} %>
+<% end %> <!-- end cache block -->
+          <%# cache(cache_key_for_quotes(@quotes, params[:tab], params[:page])) do %>
+              <% @quotes.each do |quote| %>
+                <%= render partial: "quotes/quote_block", locals: {quote: quote} %>
+              <% end %>
+          <%# end %>
           <% unless @quotes.nil? %>
               <div class="pages">
                 <div class="left-arrow"><%= link_to_previous_page @quotes, '<i class="fa fa-angle-double-left fa-3x"></i>'.html_safe, :params => {:tab => @tab_id } %></div>

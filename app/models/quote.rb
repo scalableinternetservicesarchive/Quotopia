@@ -1,15 +1,17 @@
+require 'digest/md5'
+
 class Quote < ActiveRecord::Base
   include Elasticsearch::Model
   include Elasticsearch::Model::Callbacks
 
-  belongs_to :author
+  belongs_to :author, :touch => true
   # belongs_to :submitter, class_name: 'User', foreign_key: 'user_id' if keep tracking of user-submissions does not work
   belongs_to :user
   has_many :votes, dependent: :destroy
   has_many :users, :through => :votes
   has_many :comments, dependent: :destroy
   has_many :categorizations, dependent: :destroy
-  has_many :categories, :through => :categorizations
+  has_many :categories, :through => :categorizations # , after_remove: proc { |q| q.touch }
   has_many :favorite_quotes, dependent: :destroy
   has_many :favorited_by, through: :favorite_quotes, source: :user  # users that favorite a quote
 
@@ -44,6 +46,10 @@ class Quote < ActiveRecord::Base
 
   # This determines how many quotes to display per page
   paginates_per 7
+
+  # def self.cache_key
+  #   Digest::MD5.hexdigest "#{maximum(:updated_at)}.try(:to_i)-#{count}"
+  # end
 
   trigger.after(:insert) do
     "UPDATE authors SET quote_count = quote_count + 1 WHERE NEW.author_id = id;"

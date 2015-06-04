@@ -1,5 +1,5 @@
 class Comment < ActiveRecord::Base
-  belongs_to :quote
+  belongs_to :quote #, touch: true
   belongs_to :user
 
   validates :content, presence: true
