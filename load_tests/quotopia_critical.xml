@@ -263,6 +263,9 @@
         </http>
       </request>
 
+
+
+
       <!-- Visit 2 more pages of trending -->
       <for from="2" to="4" incr="1" var="pagenum">
         <request subst="true"> <http url="/home/index?page=%%_pagenum%%&amp;tab=trending"/> </request>
@@ -278,6 +281,7 @@
       <!-- Visit first page of all time quotes -->
       <request> <http url="/home/index?tab=all-time"/> </request>
       <thinktime value="1" random="true"/>
+>>>>>>> 8cd1a426d68bdc765fc500c5bfb58fb22ff65694
 
       <!-- Visit 5 random quotes -->
       <for from="1" to="5" var="counter">
@@ -287,6 +291,7 @@
         <request subst="true">
           <http url="/quotes/%%_random_quote_id%%" method="GET"/>
         </request>
+
         <thinktime value="3" random="true"/>
       </for>	
 

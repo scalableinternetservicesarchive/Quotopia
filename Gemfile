@@ -26,10 +26,13 @@ gem 'devise'
 
 # Use kaminari as the pagination engine
 gem 'kaminari'
-
 # twitter-typeahead-rails for typeahead
-gem 'twitter-typeahead-rails'
-
+gem 'twitter-typeahead-rails', :git => "git://github.com/yourabi/twitter-typeahead-rails.git"
+# elasticsearch for inverted index
+gem 'elasticsearch'
+gem 'elasticsearch-model'
+gem 'elasticsearch-persistence'
+gem 'elasticsearch-rails'
 # mysql gem driver for prod and test
 gem 'mysql'
 # Use ActiveModel has_secure_password
@@ -48,8 +51,13 @@ gem 'omniauth'
 
 # for mysql Triggers
 gem 'hairtrigger'
+# multi_json for aws
+gem 'multi_json', '1.7.8'
 
 group :development, :test do
+  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'byebug'
+
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'
 
@@ -84,4 +92,6 @@ end
 
 gem 'mocha', group: :test
 
+# new relic performance monitoring
+gem 'newrelic_rpm'
 
