@@ -49,9 +49,10 @@ class VotesController < ApplicationController
           format.json { render json: @vote, status: :ok, location: @vote }
           format.js {}
         elsif @vote.value.to_s != vote_params[:value]
-          if @vote.destroy
+          @vote.value = @vote.value + vote_params[:value].to_i
+          if @vote.save
             format.html { redirect_to @vote, notice: 'Vote was successfully destroyed.' }
-            format.json { head :no_content }
+            format.json { render json: @vote, status: :ok, location: @vote }
             format.js {render action: "update"}
           else
             format.html { render :new }
