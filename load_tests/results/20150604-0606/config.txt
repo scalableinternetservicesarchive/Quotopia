@@ -1,3 +1,0 @@
-vertical scaling
-m3.medium, nginx+passenger, 1 app
-master
