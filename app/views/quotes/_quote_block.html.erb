@@ -1,4 +1,5 @@
-<% 
+<%
+    # requires quotes, display_author 
     if user_signed_in?
         @user_signed_in = true
         @current_user_id = current_user.id
@@ -11,14 +12,18 @@
         @allow_twitter = true
     end
 
+    # assume to display_author if not explicitly told not to
     display_author = true if local_assigns[:display_author].nil?
+    
+    # used for when we render from author#show
     author = nil if local_assigns[:author].nil?
-    categories = nil if local_assigns[:categories].nil?
 %>
     <%
+        # check if we get author name from template var, otherwise try to pull
+        # from quote.author_name
         @author_string = author.nil? ? quote.author_name : author
         if @allow_twitter    
-            @categories_string = categories.nil? ? quote.categories.map {|c| '#' + c.content.gsub(/\s+/, "")}.join(' ') : "##{categories.content}"
+            @categories_string = quote.categories.map {|c| '#' + c.content.gsub(/\s+/, "")}.join(' ') 
             @tweet_content = "#{quote.content} -#{@author_string} #{@categories_string}".truncate(140)
         end
     %>
