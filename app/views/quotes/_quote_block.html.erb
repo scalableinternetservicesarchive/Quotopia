@@ -18,6 +18,7 @@
     # used for when we render from author#show
     author = nil if local_assigns[:author].nil?
 %>
+<% quotes.each do |quote| %>
     <%
         # check if we get author name from template var, otherwise try to pull
         # from quote.author_name
@@ -75,4 +76,4 @@
             </div>
         </div>
     </div>
-
+<% end %>
