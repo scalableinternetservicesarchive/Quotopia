@@ -1,1 +1,2 @@
-m3.medium, 1 app, unoptimized
+m3.medium, 1 app
+master
