@@ -8,6 +8,8 @@ class SearchesController < ApplicationController
         #@search_quotes = Quote.search(params[:q]).page(params[:page])
         @results = map_to_obj(search_index(params[:q]))
         @search_quotes = Kaminari.paginate_array(@results).page(params[:page]).per(7)
+        #puts render json: map_to_obj(search_index(params[:q]))
+        puts render json: search_index(params[:q])
       else
         @search_quotes = nil
       end
@@ -28,7 +30,7 @@ class SearchesController < ApplicationController
             @quote = OpenStruct.new(
                 :id => @source["id"],
                 :content => @content,
-                :author_id => @source["author_id"],
+                :author_id => @source["author"]["id"],
                 :author_name => @author_name
             )
         end

@@ -14,7 +14,9 @@
 
     # assume to display_author if not explicitly told not to
     display_author = true if local_assigns[:display_author].nil?
-    
+    # assume to NOT render search-style (html_safe) if not explicitly told to do so
+    render_search = false if local_assigns[:search_results].nil?
+
     # used for when we render from author#show
     author = nil if local_assigns[:author].nil?
 %>
@@ -43,16 +45,16 @@
         <div class="col-xs-8 col-xs-height quote-text panel panel-default center" id="quote-panel">
             <% div_id = "quote_#{quote.id}" %>
             <div onclick="location.href='<%=quote_path(quote.id)%>';" style="cursor: pointer;" class="panel-body quote-content no-highlight over">
-                <%= quote.content %>
+                
+                <%= quote.content.html_safe %>
                 <% if display_author %>
-                    <div class="author-name">-  <a class="no-bubble" href="<%= author_path(quote.author_id) %>"><%= quote.author_name %></a> </div>
+                    <div class="author-name">-  <a class="no-bubble" href="<%= author_path(quote.author_id) %>"><%= quote.author_name.html_safe %></a> </div>
                 <% end %>
                 <br>
               <%= javascript_tag do %>
                   $('.no-bubble').click(function(event) {
                     event.stopImmediatePropagation();
                   });
-
               <% end %>
             </div>
         </div>

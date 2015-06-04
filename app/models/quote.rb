@@ -26,17 +26,7 @@ class Quote < ActiveRecord::Base
 
   def as_indexed_json(options={})
       as_json(
-          only: [:id, :content, :author_id],
-          include: {
-            categories: {only: :content},
-            author: {only: :name}
-          }
-      )
-  end
-
-  def as_indexed_json(options={})
-      as_json(
-          only: [:id, :content, :author_id],
+          only: [:id, :content, :author_id, :vote_count, :updated_at],
           include: {
             categories: {only: :content},
             author: {only: :name}
