@@ -1,0 +1,4 @@
+Horizontal scaling
+AppServer: 2 m3.large
+DB: m3.large
+rails-opt
