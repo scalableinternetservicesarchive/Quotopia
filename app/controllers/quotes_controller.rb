@@ -21,7 +21,7 @@ class QuotesController < ApplicationController
   # GET /quotes/1
   # GET /quotes/1.json
   def show
-    @quote = Quote.includes(:author, :user, :categories, {comments: :user}).find(params[:id])
+    @quote = Quote.includes(:author, :categories, {comments: :user}).find(params[:id])
     @comment = Comment.new
     @categories = @quote.categories.map {|c| '#' + c.content.gsub(/\s+/, "")}.join(' ')
     @tweet = "#{@quote.content} -#{@quote.author.name} #{@categories}".truncate(140)
