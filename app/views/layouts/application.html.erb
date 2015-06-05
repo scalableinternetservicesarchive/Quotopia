@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<% cache('layout') do %>
+<% cache 'layout', skip_digest: true do %>
 <head>
   <title>Quotopia</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>

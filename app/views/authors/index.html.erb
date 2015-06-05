@@ -1,4 +1,4 @@
-<%= cache cache_key_for_author_table(@authors) do %>
+<%= cache cache_key_for_author_table(@authors), skip_digest: true do %>
 <p id="notice"><%= notice %></p>
 <h1>"Who have said things?"</h1>
 <hr>

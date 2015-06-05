@@ -1,4 +1,4 @@
-<%= cache cache_key_for_category_table(@sorted) do %>
+<%= cache cache_key_for_category_table(@sorted), skip_digest: true do %>
 <p id="notice"><%= notice %></p>
 
 <h1>Which Categories?</h1>
