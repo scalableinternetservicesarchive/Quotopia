@@ -1,7 +1,7 @@
 class AuthorsController < ApplicationController
   before_action :set_author, only: [:show, :edit, :update, :destroy]
   before_filter :authenticate_user!, :only => [:new, :edit, :update, :destroy]
-  
+
   helper TweetsHelper
 
   @@column_names = ["name", "quote_count"]
@@ -10,17 +10,17 @@ class AuthorsController < ApplicationController
     @authors = Author.order(quote_count: :desc, updated_at: :asc)
   end
 
-  def author_ajax 
+  def author_ajax
     # endpoint syntax: http://localhost:3000/author_ajax?start=0&length=10&search=
     # note that there are 2 columns in this table:
-    # Name | Quotes  
+    # Name | Quotes
     @result = parse_datatable_ajax(@@column_names)
     @result["recordsTotal"] = Author.count
     @result["recordsFiltered"] = Author.where(@where).count
     @categories = Author.select("id, name, quote_count").where(@where).order(@order).limit(@length).offset(@start).to_a
     @result["data"] = @categories
-    
-    puts render json: @result
+
+    render json: @result
   end
 
   # GET /authors
@@ -42,23 +42,23 @@ class AuthorsController < ApplicationController
     if allow_twitter()
       @author_quotes = @author.quotes
                               .includes(:categories)
-                              .joins("LEFT JOIN( SELECT id as favorite_ID, quote_id from favorite_quotes 
+                              .joins("LEFT JOIN( SELECT id as favorite_ID, quote_id from favorite_quotes
                                                  WHERE user_id = " + current_user.id.to_s + ") as favorites on quotes.id = favorites.quote_id")
-                              .joins("LEFT JOIN( select id as vote_id, quote_id, value as vote_value from votes 
-                                                 WHERE user_id = " + current_user.id.to_s + ") as user_votes on quotes.id = user_votes.quote_id") 
+                              .joins("LEFT JOIN( select id as vote_id, quote_id, value as vote_value from votes
+                                                 WHERE user_id = " + current_user.id.to_s + ") as user_votes on quotes.id = user_votes.quote_id")
                               .select("quotes.id, quotes.content, quotes.updated_at, favorite_id, vote_id, vote_value, vote_count")
                               .order(vote_count: :desc)
                               .all.page(params[:page])
     elsif user_signed_in?
       @author_quotes = @author.quotes
-                              .joins("LEFT JOIN( SELECT id as favorite_ID, quote_id from favorite_quotes 
+                              .joins("LEFT JOIN( SELECT id as favorite_ID, quote_id from favorite_quotes
                                                  WHERE user_id = " + current_user.id.to_s + ") as favorites on quotes.id = favorites.quote_id")
-                              .joins("LEFT JOIN( select id as vote_id, quote_id, value as vote_value from votes 
-                                                 WHERE user_id = " + current_user.id.to_s + ") as user_votes on quotes.id = user_votes.quote_id") 
+                              .joins("LEFT JOIN( select id as vote_id, quote_id, value as vote_value from votes
+                                                 WHERE user_id = " + current_user.id.to_s + ") as user_votes on quotes.id = user_votes.quote_id")
                               .select("quotes.id, quotes.content, quotes.updated_at, favorite_id, vote_id, vote_value, vote_count")
                               .order(vote_count: :desc)
                               .all.page(params[:page])
-    else 
+    else
       @author_quotes = @author.quotes
                               .order(vote_count: :desc)
                               .all.page(params[:page])

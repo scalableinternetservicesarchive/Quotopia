@@ -70,7 +70,7 @@ class QuotesController < ApplicationController
   end
 
   def favorite
-    
+
   end
 
   # PATCH/PUT /quotes/1

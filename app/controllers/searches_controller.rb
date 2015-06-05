@@ -1,8 +1,8 @@
 class SearchesController < ApplicationController
     require 'ostruct'
-    def search 
+    def search
       @has_search = false
-    
+
       if params[:q] && !params[:q].empty?
         @has_search = true
         # @search_quotes = Quote.search(params[:q]).page(params[:page])
@@ -20,7 +20,7 @@ class SearchesController < ApplicationController
 
         @results = results.map do |result|
             @source = result["_source"]
-            
+
             @author_name = @source["author"]["name"]
             @highlight_author_name = @source["author"]["name"]
             @content = @source["content"]
@@ -44,9 +44,9 @@ class SearchesController < ApplicationController
                 :highlight_author_name => @highlight_author_name,
                 :updated_at => @source["updated_at"],
             )
-            
+
         end
-        
+
         @quote_id_query = @quote_id_query[0...-3]
         @id_query = @id_query[0...-3]
 
@@ -54,7 +54,7 @@ class SearchesController < ApplicationController
         Quote.where(@id_query).select("id, vote_count").each do |quote|
             @vote_counts[quote.id] = quote.vote_count
         end
-        
+
         if !@quote_id_query.empty?
             @where = "(" + @quote_id_query + ") AND user_id = #{current_user.id.to_s}"
         else
@@ -72,7 +72,7 @@ class SearchesController < ApplicationController
             Vote.where(@where).select("quote_id, id, value as vote_value").each do |vote|
                 @votes[vote.quote_id] = { :value => vote.vote_value, :id => vote.id }
             end
-            
+
             if allow_twitter
                 @where_twitter = ""
                 if !@quote_id_query.empty?
@@ -80,8 +80,8 @@ class SearchesController < ApplicationController
                 end
 
                 @categories = {}
-                Category.joins("JOIN (  SELECT quote_id, category_id 
-                                        FROM categorizations 
+                Category.joins("JOIN (  SELECT quote_id, category_id
+                                        FROM categorizations
                                         #{@where_twitter}) as needed_quotes
                                 on needed_quotes.category_id = categories.id")
                         .select("quote_id, content").each do |category|
@@ -96,20 +96,20 @@ class SearchesController < ApplicationController
         end
         @results = @results.map do |result|
             result.vote_count = @vote_counts[result.id]
-            
+
             if user_signed_in?
                 @vote = @votes[result.id]
                 if !@votes[result.id].nil?
                     result.vote_value = @votes[result.id][:value]
                     result.vote_id = @votes[result.id][:id]
-                end 
-                result.favorite_id = @favorites[result.id] 
+                end
+                result.favorite_id = @favorites[result.id]
             end
 
             if allow_twitter
                 if @categories[result.id].nil?
                     result.categories = []
-                else 
+                else
                     result.categories = @categories[result.id]
                 end
             end
@@ -156,7 +156,7 @@ class SearchesController < ApplicationController
         puts render json: @quotes
         #render "quotes/_quote_block" #puts render body: search_index(@q).to_json
     end
-    
+
     def typeahead
         @type = params[:type]
 
@@ -185,7 +185,7 @@ class SearchesController < ApplicationController
                 }
             }
         }
-        
+
         case @type
         when "author"
             @results = Elasticsearch::Model.search(@query, [Author]).results.map do |result|
@@ -218,17 +218,12 @@ class SearchesController < ApplicationController
         #end
         #@authors = Author.select("authors.name as value")
         #                 .where("authors.name LIKE ?", "%#{@q}%")
-        
+
         #@categories = Category.select("categories.content as value")
         #                      .where("categories.content LIKE ?", "%#{@q}%")
-        
-        #Uncomment this to add searching on Quotes.content
-        #@quotes = Quote.select("quotes.content as value")
-        #               .where("quotes.content LIKE ?", "%#{@q}%")
-        
-        #might want to ensure capitalization in @categories?
-        puts render json: @results 
 
+
+        render json: @results
     end
-end 
+end
 
