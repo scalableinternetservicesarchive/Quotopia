@@ -1,3 +1,0 @@
-Vertical scaling
-m3.2XL, nginx+passenger, 1 appserver
-master
