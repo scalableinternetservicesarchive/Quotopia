@@ -1,0 +1,3 @@
+Vertical scaling
+m3.medium, 1 app server
+master branch

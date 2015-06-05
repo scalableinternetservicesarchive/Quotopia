@@ -1,0 +1,4 @@
+Horiz scaling
+App instance: 1 m3.large
+DB instance: m3.large
+master branch
