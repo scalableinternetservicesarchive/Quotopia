@@ -1,3 +1,0 @@
-Vertical scaling
-m3.large, nginx+passenger
-master branch
