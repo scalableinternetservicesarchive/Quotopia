@@ -234,7 +234,7 @@
                                     "Ref": "AppInstanceType"
                                 },
                                 "\" == \"t1.micro\" ]; then\n  swapoff /swap || error_exit 'Failed to disable swap'\n  rm /swap || error_exit 'Failed to delete /swap'\nfi\n",
-                                "# Start passenger\nuser_sudo passenger start -d --no-compile-runtime --nginx-config-template /home/enco/workspace/Quotopia/config/passenger/config.erb || error_exit 'Failed to start passenger'\n",
+                                "# Start passenger\nuser_sudo passenger start -d --no-compile-runtime --nginx-config-template /home/ec2-user/app/config/passenger/config.erb || error_exit 'Failed to start passenger'\n",
                                 "# All is well so signal success\n/opt/aws/bin/cfn-signal -e 0 --stack ",
                                 {
                                     "Ref": "AWS::StackName"
