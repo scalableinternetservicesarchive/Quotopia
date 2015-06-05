@@ -1,5 +1,5 @@
 class Categorization < ActiveRecord::Base
-  belongs_to :quote #, touch: true
+  belongs_to :quote, :touch => true
   belongs_to :category, :touch => true
 
   trigger.after(:insert) do
