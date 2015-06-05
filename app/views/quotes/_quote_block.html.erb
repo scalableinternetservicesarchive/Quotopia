@@ -1,5 +1,5 @@
 <%
-    # requires quotes, display_author 
+    # requires quotes, display_author
     if user_signed_in?
         @user_signed_in = true
         @current_user_id = current_user.id
@@ -25,8 +25,8 @@
         # check if we get author name from template var, otherwise try to pull
         # from quote.author_name
         @author_string = author.nil? ? quote.author_name : author
-        if @allow_twitter    
-            @categories_string = quote.categories.map {|c| '#' + c.content.gsub(/\s+/, "")}.join(' ') 
+        if @allow_twitter
+            @categories_string = quote.categories.map {|c| '#' + c.content.gsub(/\s+/, "")}.join(' ')
             @tweet_content = "#{quote.content} -#{@author_string} #{@categories_string}".truncate(140)
         end
     %>
@@ -41,12 +41,12 @@
                 <span class="fa fa-2x fa-chevron-down gray" aria-hidden="true" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Sign in to downvote"></span>
             <% end %>
         </div>
-        <% cache(cache_key_for_quote(quote, display_author, search)) do %>
+        <% cache cache_key_for_quote(quote, display_author, search), skip_digest: true do %>
         <div class="col-xs-8 col-xs-height quote-text panel panel-default center" id="quote-panel">
             <% div_id = "quote_#{quote.id}" %>
             <div onclick="location.href='<%=quote_path(quote.id)%>';" style="cursor: pointer;" class="panel-body quote-content no-highlight over">
             <% if search %>
-                <%= quote.highlight_content.html_safe %> 
+                <%= quote.highlight_content.html_safe %>
                 <% if display_author %>
                     <div class="author-name">-  <a class="no-bubble" href="<%= author_path(quote.author_id) %>"><%= quote.highlight_author_name.html_safe %></a> </div>
                 <% end %>
@@ -70,7 +70,7 @@
             <% if @user_signed_in %>
                 <div class="favorite-<%=quote.id%>">
                     <%= render partial: "favorite_quotes/favorite_block", locals: {quote_id: quote.id, favorite_id: quote.favorite_id, current_user_id: current_user.id} %>
-                </div>      
+                </div>
             <% else %>
                  <button style="cursor: default;pointer-events: auto;" type="submit" class="btn btn-default disabled" data-toggle="tooltip" data-trigger="hover" title="Sign in to favorite">
                     <span class="fa fa-2x fa-heart-o" aria-hidden="true"></span>
