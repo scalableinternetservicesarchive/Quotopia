@@ -1,21 +1,21 @@
 class CategoriesController < ApplicationController
   before_action :set_category, only: [:show, :edit, :update, :destroy]
   before_filter :authenticate_user!, :only => [:new, :edit, :update, :destroy]
-  
+
   @@column_names = ["content", "quote_count"]
 
   def category_ajax
     # endpoint syntax: http://localhost:3000/category_ajax?start=0&length=10&search=
     # note that there are 3 columns in this table:
-    # Name | Quotes  
-       
+    # Name | Quotes
+
     @result = parse_datatable_ajax(@@column_names)
     @result["recordsTotal"] = Category.count
     @result["recordsFiltered"] = Category.where(@where).count
     @categories = Category.select("id, content, quote_count").where(@where).order(@order).limit(@length).offset(@start).to_a
     @result["data"] = @categories
-    
-    puts render json: @result
+
+    render json: @result
   end
 
   # GET /categories
@@ -37,10 +37,10 @@ class CategoriesController < ApplicationController
       @quotes = @category.quotes
                          .includes(:categories)
                          .joins(:author)
-                         .joins("LEFT JOIN( SELECT id as favorite_ID, quote_id from favorite_quotes 
+                         .joins("LEFT JOIN( SELECT id as favorite_ID, quote_id from favorite_quotes
                                             WHERE user_id = " + current_user.id.to_s + ") as favorites on quotes.id = favorites.quote_id")
-                         .joins("LEFT JOIN( SELECT id as vote_id, quote_id, value as vote_value from votes 
-                                            WHERE user_id = " + current_user.id.to_s + ") as user_votes on quotes.id = user_votes.quote_id") 
+                         .joins("LEFT JOIN( SELECT id as vote_id, quote_id, value as vote_value from votes
+                                            WHERE user_id = " + current_user.id.to_s + ") as user_votes on quotes.id = user_votes.quote_id")
                          .order(vote_count: :desc)
                          .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id, favorite_id, vote_id, vote_value, vote_count")
                          .all
@@ -48,10 +48,10 @@ class CategoriesController < ApplicationController
     elsif user_signed_in?
       @quotes = @category.quotes
                          .joins(:author)
-                         .joins("LEFT JOIN( SELECT id as favorite_ID, quote_id from favorite_quotes 
+                         .joins("LEFT JOIN( SELECT id as favorite_ID, quote_id from favorite_quotes
                                             WHERE user_id = " + current_user.id.to_s + ") as favorites on quotes.id = favorites.quote_id")
-                         .joins("LEFT JOIN( SELECT id as vote_id, quote_id, value as vote_value from votes 
-                                            WHERE user_id = " + current_user.id.to_s + ") as user_votes on quotes.id = user_votes.quote_id") 
+                         .joins("LEFT JOIN( SELECT id as vote_id, quote_id, value as vote_value from votes
+                                            WHERE user_id = " + current_user.id.to_s + ") as user_votes on quotes.id = user_votes.quote_id")
                          .order(vote_count: :desc)
                          .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id, favorite_id, vote_id, vote_value, vote_count")
                          .all
