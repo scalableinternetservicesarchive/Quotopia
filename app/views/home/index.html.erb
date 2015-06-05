@@ -1,4 +1,3 @@
-<%= cache 'mainpage', skip_digest: true do %>
 <p id="notice"><%= notice %></p>
 <div id="alert-placeholder"></div>
 
@@ -34,7 +33,6 @@ $(document).ready(function(){
 <div class="row" id="quotes">
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active">
-<% end %> <!-- end cache block -->
           <%# cache(cache_key_for_quotes(@quotes, params[:tab], params[:page])) do %>
             <%= render partial: "quotes/quote_block", locals: {quotes: @quotes} %>
           <%# end %>
