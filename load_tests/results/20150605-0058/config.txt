@@ -1,4 +1,0 @@
-Horizontal scaling
-App: m3.large, 1 appserver
-DB: m3.large
-master
