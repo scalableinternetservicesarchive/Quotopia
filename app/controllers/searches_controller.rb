@@ -7,8 +7,8 @@ class SearchesController < ApplicationController
         @has_search = true
         # @search_quotes = Quote.search(params[:q]).page(params[:page])
         @results = map_to_obj(search_index(params[:q]))
-        #@search_quotes = Kaminari.paginate_array(@results).page(params[:page]).per(7)
-        puts render json: map_to_obj(search_index(params[:q]))
+        @search_quotes = Kaminari.paginate_array(@results).page(params[:page]).per(7)
+        # puts render json: map_to_obj(search_index(params[:q]))
       else
         @search_quotes = nil
       end
@@ -22,12 +22,14 @@ class SearchesController < ApplicationController
             @source = result["_source"]
             
             @author_name = @source["author"]["name"]
+            @highlight_author_name = @source["author"]["name"]
             @content = @source["content"]
+            @highlight_content = @source["content"]
 
             # use highlighted fields if possible
             if result.has_key?("highlight")
-                @author_name = result["highlight"]["name"].join('') if result["highlight"].has_key?("name")
-                @content = result["highlight"]["content"].join('') if result["highlight"].has_key?("content")
+                @highlight_author_name = result["highlight"]["name"].join('') if result["highlight"].has_key?("name")
+                @highlight_content = result["highlight"]["content"].join('') if result["highlight"].has_key?("content")
             end
 
             @quote_id_query += "quote_id = #{@source["id"]} OR "
@@ -38,6 +40,8 @@ class SearchesController < ApplicationController
                 :content => @content,
                 :author_id => @source["author_id"],
                 :author_name => @author_name,
+                :highlight_content => @highlight_content,
+                :highlight_author_name => @highlight_author_name,
                 :updated_at => @source["updated_at"],
             )
             
@@ -51,7 +55,12 @@ class SearchesController < ApplicationController
             @vote_counts[quote.id] = quote.vote_count
         end
         
-        @where = "(" + @quote_id_query + ") AND user_id = #{current_user.id.to_s}"
+        if !@quote_id_query.empty?
+            @where = "(" + @quote_id_query + ") AND user_id = #{current_user.id.to_s}"
+        else
+            @where = "user_id = #{current_user.id.to_s}"
+        end
+
         # query for the favorite, vote information if needed
         if user_signed_in?
             @favorites = {}
@@ -59,20 +68,35 @@ class SearchesController < ApplicationController
                 @favorites[favorite.quote_id] = favorite.id
             end
 
-            
             @votes = {}
             Vote.where(@where).select("quote_id, id, value as vote_value").each do |vote|
                 @votes[vote.quote_id] = { :value => vote.vote_value, :id => vote.id }
             end
             
-            
-            #if allow_twitter
-            #    Category.joins("JOIN (SELECT)")
-            #end
+            if allow_twitter
+                @where_twitter = ""
+                if !@quote_id_query.empty?
+                    @where_twitter = "WHERE #{@quote_id_query}"
+                end
 
+                @categories = {}
+                Category.joins("JOIN (  SELECT quote_id, category_id 
+                                        FROM categorizations 
+                                        #{@where_twitter}) as needed_quotes
+                                on needed_quotes.category_id = categories.id")
+                        .select("quote_id, content").each do |category|
+                            @category_object = OpenStruct.new(:content => category.content)
+                            if @categories[category.quote_id].nil?
+                                @categories[category.quote_id] = [@category_object]
+                            else
+                                @categories[category.quote_id].push(@category_object)
+                            end
+                        end
+            end
         end
         @results = @results.map do |result|
             result.vote_count = @vote_counts[result.id]
+            
             if user_signed_in?
                 @vote = @votes[result.id]
                 if !@votes[result.id].nil?
@@ -81,6 +105,15 @@ class SearchesController < ApplicationController
                 end 
                 result.favorite_id = @favorites[result.id] 
             end
+
+            if allow_twitter
+                if @categories[result.id].nil?
+                    result.categories = []
+                else 
+                    result.categories = @categories[result.id]
+                end
+            end
+
             result
         end
 
