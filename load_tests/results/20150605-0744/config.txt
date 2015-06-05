@@ -1,0 +1,5 @@
+Horizontal Scaling
+AppServer: 2 m3.large
+DB: m3.large
+Memcached: m3.large
+caching branch

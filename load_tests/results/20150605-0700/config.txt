@@ -1,0 +1,4 @@
+Vertical Scaling
+Single instance m3.large
+AppServer+DB+Memcached
+caching branch

@@ -1,0 +1,5 @@
+Horizontal+Vertical Scaling
+AppServer: 5 m3.2XL
+DB: m3.2XL
+Memcached: m3.2XL
+caching branch
