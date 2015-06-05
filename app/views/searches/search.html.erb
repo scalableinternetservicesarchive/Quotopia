@@ -1,5 +1,5 @@
 <!--<%= javascript_include_tag "validate" %>-->
-
+<%= cache 'search-index', skip_digest: true do %>
 <div class="row">
   <div class="page-header">
     <h1>Search Results </h1>
@@ -9,7 +9,7 @@
 </div>
 
 <br>
-
+<% end %> <!-- end cache block -->
 <div>
   <% if @search_quotes.present? %>
       <%= render partial: "quotes/quote_block", locals: {quotes: @search_quotes} %>
