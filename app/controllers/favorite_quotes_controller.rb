@@ -101,7 +101,7 @@ class FavoriteQuotesController < ApplicationController
             where user_id = #{current_user.id}) 
             as favorites on quotes.id = favorites.quote_id")
                 .joins(:author)
-                .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id")
+                .select("quotes.id, quotes.content, quotes.updated_at, quotes.vote_count, authors.name as author_name, authors.id as author_id")
                 .all
 
   end

@@ -3,6 +3,7 @@
     author = nil if local_assigns[:author].nil?
     categories = nil if local_assigns[:categories].nil?
 %>
+<% quotes.each do |quote| %>
       <%
          @author_string = author.nil? ? quote.author_name : author
          @categories_string = categories.nil? ? quote.categories.map {|c| '#' + c.content.gsub(/\s+/, "")}.join(' ') : "##{categories.content}"
@@ -60,5 +61,5 @@
             </div>
         </div>
     </div>
-<%# end %>
+<% end %>
 

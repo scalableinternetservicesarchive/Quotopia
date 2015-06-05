@@ -43,12 +43,12 @@ class Quote < ActiveRecord::Base
 
   def self.search(search)
     @quote = Quote.joins(:author, :categories)
-                  .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id")
+                  .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id, quotes.updated_at")
                   .where("categories.content LIKE ?", "#{search}")
 
     if @quote.empty?
       @quote = Quote.joins(:author)
-                    .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id")
+                    .select("quotes.id, quotes.content, authors.name as author_name, authors.id as author_id, quotes.updated_at")
                     .where("authors.name LIKE ? or content LIKE ?", "%#{search}%", "%#{search}%")
     end
 

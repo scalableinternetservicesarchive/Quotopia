@@ -3,11 +3,7 @@
 
 <h2> <%="What's #{@category.content.capitalize}?"%></h2>
 <hr>
-<ul>
-  <% @quotes.each do |quote| %>
-    <%= render partial: "quotes/quote_block", locals: {quote: quote, categories: @category} %>
-  <% end %>
-</ul>
+    <%= render partial: "quotes/quote_block", locals: {quotes: @quotes, categories: @category} %>
 <% unless @quotes.nil? %>
     <div>
       <div class="pages">
