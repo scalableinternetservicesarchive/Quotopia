@@ -1,0 +1,4 @@
+Horizontal scaling
+AppServer: 2 app servers, m3.large
+DBServer: m3.large
+master branch
