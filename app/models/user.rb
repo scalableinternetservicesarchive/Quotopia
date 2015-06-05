@@ -38,7 +38,6 @@ class User < ActiveRecord::Base
       if data = session["devise.twitter_data"]
         #user.email = data[:info][:nickname] if user.email.blank?
         user.email = @user_data[:info][:nickname] if user.email.blank?
-        puts user.email
       end
     end
   end
