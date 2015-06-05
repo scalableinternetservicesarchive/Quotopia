@@ -3,9 +3,7 @@
 
 <h2> <%="What has #{@author.name} said?"%></h2>
 <hr>
-<ul>
   <%= render partial: "quotes/quote_block", locals: {quotes: @author_quotes, display_author: false, author: @author.name} %>
-</ul>
 <% unless @author_quotes.nil? %>
     <div>
       <div class="pages">

@@ -12,7 +12,7 @@ class QuotesController < ApplicationController
 
     if params[:search] && !params[:search].empty?
       @has_search = true
-      @search_quotes = Quote.search(params[:search]).page(params[:page])
+      @search_quotes = Quote.search(params[:search], current_user).page(params[:page])
     else
       @search_quotes = nil
     end

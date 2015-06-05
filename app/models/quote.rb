@@ -54,19 +54,29 @@ class Quote < ActiveRecord::Base
     "UPDATE authors SET quote_count = quote_count - 1 WHERE OLD.author_id = id;"
   end
 
-  def self.search(search)
-    @select = "quotes.id, quotes.content, quotes.vote_count, authors.name as author_name, authors.id as author_id"
-    @quote = Quote.joins(:author, :categories)
-                  .select(@select)
-                  .where("categories.content LIKE ?", "#{search}")
-
-    if @quote.empty?
-      @quote = Quote.joins(:author)
-                    .select(@select)
-                    .where("authors.name LIKE ? or content LIKE ?", "%#{search}%", "%#{search}%")
+  def self.search(search, current_user)
+    @where = "categories.content LIKE '%#{search}%' OR authors.name LIKE '%#{search}%'"
+    if !current_user.nil?
+        @quotes = Quote.joins(:categories)
+                       .joins(:author)
+                       .joins("LEFT JOIN( select id as vote_id, quote_id, value as vote_value from votes 
+                               WHERE user_id = " + current_user.id.to_s + ") as user_votes on quotes.id = user_votes.quote_id") 
+                       .joins("LEFT JOIN( SELECT id as favorite_ID, quote_id from favorite_quotes 
+                                          WHERE user_id = " + current_user.id.to_s + ") as favorites on quotes.id = favorites.quote_id")
+                       .where(@where)
+                       .order(vote_count: :desc)
+                       .select("quotes.id, quotes.content, quotes.updated_at, authors.name as author_name, authors.id as author_id, favorite_id, vote_id, vote_value, vote_count")
+                       .all
+    else 
+        @quotes = Quote.joins(:categories)
+                       .joins(:author)
+                       .where(@where)
+                       .order(vote_count: :desc)
+                       .select("quotes.id, quotes.content, quotes.updated_at, authors.name as author_name, authors.id as author_id, vote_count")
+                       .all
     end
 
-    return @quote
+    return @quotes
   end
 
   def category_list=(categories_string)
