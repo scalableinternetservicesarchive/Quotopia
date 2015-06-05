@@ -1,3 +1,0 @@
-vertical scaling
-m3.xlarge, nginx+passenger, 1appserver
-master branch
