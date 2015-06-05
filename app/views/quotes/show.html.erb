@@ -1,4 +1,4 @@
-<%= cache [@quote, @quote.comments.size] do %>
+<%= cache [@quote, @quote.comments.size], skip_digest: true do %>
 <p id="notice"><%= notice %></p>
 <div id="alert-placeholder"></div>
 
