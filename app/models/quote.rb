@@ -78,7 +78,7 @@ class Quote < ActiveRecord::Base
     super(:only => [:id, :content],
     :include => {
         :author => {:only => [:id, :name]},
-        :categories => {:only => [:content]}
+        :categories => {:only => [:id, :content]}
     })
   end
 

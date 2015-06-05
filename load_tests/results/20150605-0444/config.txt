@@ -1,0 +1,4 @@
+Vertical+Horizontal Scaling
+AppServers: 5 m3.2XL
+DB: m3.2XL
+master branch
