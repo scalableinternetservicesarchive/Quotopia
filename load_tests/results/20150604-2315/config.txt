@@ -1,3 +1,0 @@
-Vertical scaling
-m3.medium, nginx+passenger
-master branch
